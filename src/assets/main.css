@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme {
+  --font-primary: 'Josefin Sans', sans-serif;
+  --font-secondary: 'Lato', sans-serif;
+
+  /* Colors */
+  --color-white: oklch(95.64% 0 0);
+  --color-black: oklch(18.74% 0 0);
+
+  --color-primary-lighter: oklch(67.14% 0.189 262.64);
+  --color-primary-light: oklch(61.58% 0.189 262.64);
+  --color-primary: oklch(53.42% 0.189 262.64);
+  --color-primary-dark: oklch(47.78% 0.189 262.64);
+  --color-primary-darker: oklch(41.14% 0.189 262.64);
+
+  --color-utility-lighter: oklch(88.58% 0 0);
+  --color-utility-light: oklch(78.14% 0 0);
+  --color-utility: oklch(67.58% 0 0);
+  --color-utility-dark: oklch(61.14% 0 0);
+  --color-utility-darker: oklch(55.7% 0 0);
+
+  --color-error-lighter: oklch(70% 0.15 25);
+  --color-error-light: oklch(65% 0.155 25);
+  --color-error: oklch(60% 0.16 25);
+  --color-error-dark: oklch(55% 0.165 25);
+  --color-error-darker: oklch(50% 0.17 25);
+
+  --color-success-lighter: oklch(70% 0.14 150);
+  --color-success-light: oklch(65% 0.145 150);
+  --color-success: oklch(60% 0.15 150);
+  --color-success-dark: oklch(55% 0.155 150);
+  --color-success-darker: oklch(50% 0.16 150);
+
+  --color-warning-lighter: oklch(75% 0.085 85);
+  --color-warning-light: oklch(70% 0.09 85);
+  --color-warning: oklch(65% 0.095 85);
+  --color-warning-dark: oklch(60% 0.1 85);
+  --color-warning-darker: oklch(55% 0.105 85);
+
+  --color-bg-subtle: oklch(92% 0 0);
+  --color-bg-alt: oklch(85% 0 0);
+  --color-bg-muted-blue: oklch(92% 0.015 262.64);
+  --color-bg-soft-dark: oklch(30% 0 0);
+
+  /* Fonts */
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 4rem;
+  --text-7xl: 5rem;
+  --text-8xl: 6rem;
+  --text-9xl: 7rem;
+}
