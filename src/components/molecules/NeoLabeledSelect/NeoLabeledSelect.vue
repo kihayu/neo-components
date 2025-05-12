@@ -18,15 +18,12 @@
     <ul
       ref="listRef"
       :id="listboxId"
-      class="absolute max-h-52 max-w-full overflow-y-auto rounded-b-xl border-x-4 border-b-4"
+      class="absolute max-h-52 max-w-full overflow-y-auto rounded-b-xl border-x-4 border-b-4 opacity-0 transition-[opacity,transform,visibility] duration-200 ease-in-out"
       :style="{
         width: dropdownWidth + 'px',
-        visibility: selectOpen ? 'visible' : 'hidden',
-        opacity: selectOpen ? 1 : 0,
         transform: selectOpen ? 'translateY(0)' : 'translateY(-10px)',
-        transition:
-          'opacity 0.2s ease-in-out, transform 0.2s ease-in-out, visibility 0.2s ease-in-out',
       }"
+      :class="{ 'opacity-100': selectOpen }"
       :aria-expanded="selectOpen"
       role="listbox"
       :aria-hidden="!selectOpen"
