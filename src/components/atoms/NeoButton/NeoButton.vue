@@ -1,13 +1,25 @@
 <template>
   <div class="relative w-fit">
     <motion.button
-      :while-hover="{ scale: disabled ? 1 : 1.05 }"
+      :initial="{
+        x: extendedShadow && !disabled ? -4 : 0,
+        y: extendedShadow && !disabled ? -6 : 0,
+      }"
+      :while-hover="{
+        scale: disabled ? 1 : 1.05,
+        x: -4,
+        y: -6,
+      }"
       :while-press="{
         scale: 1.0,
-        x: extendedShadow && !disabled ? 4 : 0,
-        y: extendedShadow && !disabled ? 6 : 0,
+        x: 0,
+        y: 0,
       }"
-      :while-focus="extendedShadow ? { x: 4, y: 6 } : {}"
+      :while-focus="{
+        scale: 1.0,
+        x: extendedShadow ? 0 : -4,
+        y: extendedShadow ? 0 : -6,
+      }"
       :disabled="disabled"
       class="font-primary relative z-10 transform rounded-xl border-4 border-black text-white inset-shadow-black transition-colors duration-100 hover:cursor-pointer active:inset-shadow-sm disabled:translate-0 disabled:opacity-65 disabled:hover:cursor-not-allowed disabled:active:inset-shadow-none"
       aria-label="Button"
@@ -52,11 +64,7 @@ const buttonClasses = computed(() => {
     buttonClass.push('px-6 py-3 text-xl')
   }
 
-  buttonClass.push(
-    props.extendedShadow
-      ? '-translate-x-1 -translate-y-1.5'
-      : 'focus:outline-4 focus-visible:outline-4',
-  )
+  // buttonClass.push(!props.extendedShadow ? '' : 'focus:outline-4 focus-visible:outline-4')
 
   const buttonTypeClasses = {
     primary:
