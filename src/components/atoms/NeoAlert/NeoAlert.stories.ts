@@ -164,7 +164,7 @@ export const WithActions: Story = {
           A new version is available. Would you like to update now?
         </template>
         <template #actions>
-          <div class="flex gap-2">
+          <div class="flex gap-4">
             <NeoButton size="medium" type="primary">Update Now</NeoButton>
             <NeoButton size="medium" type="error">Remind Later</NeoButton>
           </div>
