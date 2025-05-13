@@ -18,7 +18,8 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const defaultArgs = {
-  shadow: true,
+  shadow: false,
+  dismissible: false,
   header: 'Header Content',
   footer: 'Footer Content',
 } as NeoCardProps
@@ -78,7 +79,7 @@ const renderWithHeaderAndFooterFunction = (args: NeoCardProps) => ({
   `,
 })
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
     ...defaultArgs,
   },
@@ -90,6 +91,14 @@ export const Primary: Story = {
     const shadowContainer = canvas.getByTestId('card-shadow')
     await expect(shadowContainer).toBeInTheDocument()
   },
+}
+
+export const WithDismissible: Story = {
+  args: {
+    ...defaultArgs,
+    dismissible: true,
+  },
+  render: (args) => renderFunction(args),
 }
 
 export const WithHeader: Story = {
