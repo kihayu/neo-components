@@ -1,7 +1,5 @@
 <template>
-  <!-- Tab list container -->
   <div ref="tablistRef" role="tablist" class="relative flex w-fit border-b-4 border-black">
-    <!-- Animated selection indicator -->
     <AnimatePresence>
       <motion.div
         v-if="indicatorVisible"
