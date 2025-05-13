@@ -69,10 +69,10 @@ export const Default: Story = {
           <template #trigger>
             <NeoButton>Click for Popover</NeoButton>
           </template>
-          <div class="p-2">
+          <template #header>
             <h3 class="text-lg font-bold mb-2">Popover Content</h3>
-            <p class="mb-4">This is the content of the popover.</p>
-          </div>
+          </template>
+          <p class="mb-4">This is the content of the popover.</p>
         </NeoPopover>
       </div>
     `,
@@ -92,7 +92,7 @@ export const PositionVariants: Story = {
             <template #trigger>
               <NeoButton>Top</NeoButton>
             </template>
-            <div class="p-2 w-48">
+            <div class="w-48">
               <p>Popover positioned at the top</p>
             </div>
           </NeoPopover>
@@ -103,7 +103,7 @@ export const PositionVariants: Story = {
             <template #trigger>
               <NeoButton>Right</NeoButton>
             </template>
-            <div class="p-2 w-48">
+            <div class="w-48">
               <p>Popover positioned at the right</p>
             </div>
           </NeoPopover>
@@ -114,7 +114,7 @@ export const PositionVariants: Story = {
             <template #trigger>
               <NeoButton>Left</NeoButton>
             </template>
-            <div class="p-2 w-48">
+            <div class="w-48">
               <p>Popover positioned at the left</p>
             </div>
           </NeoPopover>
@@ -125,7 +125,7 @@ export const PositionVariants: Story = {
             <template #trigger>
               <NeoButton>Bottom</NeoButton>
             </template>
-            <div class="p-2 w-48">
+            <div class="w-48">
               <p>Popover positioned at the bottom</p>
             </div>
           </NeoPopover>
@@ -150,8 +150,10 @@ export const Dismissible: Story = {
           <template #trigger>
             <NeoButton>With Close Button</NeoButton>
           </template>
-          <div class="p-3 w-64">
+          <template #header>
             <h3 class="text-lg font-bold mb-2">Dismissible Popover</h3>
+          </template>
+          <div class="w-64">
             <p>This popover has a close button in the corner.</p>
           </div>
         </NeoPopover>
@@ -197,7 +199,7 @@ export const ComplexContent: Story = {
           <template #trigger>
             <NeoButton>Select an Option</NeoButton>
           </template>
-          <div class="p-2 w-48">
+          <div class="w-48">
             <ul role="menu" class="divide-y divide-gray-200">
               <li
                 v-for="item in items"
@@ -238,7 +240,7 @@ export const DisabledState: Story = {
           <template #trigger>
             <NeoButton disabled>Disabled Popover</NeoButton>
           </template>
-          <div class="p-2">
+          <div>
             <p>This content won't be shown because the popover is disabled.</p>
           </div>
         </NeoPopover>

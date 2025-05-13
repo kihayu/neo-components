@@ -29,8 +29,8 @@
         <component :is="iconComponent" class="h-6 w-6" aria-hidden="true" />
       </div>
       <div class="flex-1">
-        <div v-if="title" class="mb-1 font-bold">{{ title }}</div>
-        <div class="text-sm">
+        <div v-if="title" class="font-primary mb-1 font-bold">{{ title }}</div>
+        <div class="font-secondary text-sm">
           <slot>{{ message }}</slot>
         </div>
         <div v-if="$slots.actions" class="mt-3">

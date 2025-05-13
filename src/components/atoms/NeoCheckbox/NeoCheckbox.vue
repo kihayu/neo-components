@@ -33,7 +33,7 @@
           <Check :size="16" class="text-white" />
         </motion.div>
       </motion.div>
-      <span :class="{ 'text-gray-500': disabled }">
+      <span class="font-primary" :class="{ 'text-gray-500': disabled }">
         <slot />
       </span>
     </motion.label>

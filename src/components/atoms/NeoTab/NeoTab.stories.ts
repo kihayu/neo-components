@@ -45,9 +45,7 @@ export const Default: Story = {
       return { args }
     },
     template: `
-      <div class="border-b-4 border-black">
-        <NeoTab v-bind="args">Tab 1</NeoTab>
-      </div>
+      <NeoTab v-bind="args">Tab 1</NeoTab>
     `,
   }),
 }
@@ -59,9 +57,14 @@ export const Selected: Story = {
       return { args }
     },
     template: `
-      <div class="border-b-4 border-black">
+      <div>
         <NeoTab v-bind="args">Selected Tab</NeoTab>
       </div>
+      <div class="mt-8 p-4 bg-gray-100 rounded-xl">
+        <p class="text-sm text-gray-700">⚠️ <strong>Note:</strong> For a correct styling of the selected tab, please see the <code>NeoTabGroup</code> molecule component.</p>
+        <p class="text-sm text-gray-700 mt-2">See: <code>Molecules/NeoTabGroup</code> in Storybook</p>
+      </div>
+
     `,
   }),
   args: {
@@ -76,9 +79,7 @@ export const Disabled: Story = {
       return { args }
     },
     template: `
-      <div class="border-b-4 border-black">
-        <NeoTab v-bind="args">Disabled Tab</NeoTab>
-      </div>
+      <NeoTab v-bind="args">Disabled Tab</NeoTab>
     `,
   }),
   args: {

@@ -29,6 +29,10 @@ const renderFunction = (args: NeoSelectProps) => ({
       <NeoSelect v-bind="args">
         Options
       </NeoSelect>
+      <div class="mt-8 p-4 bg-gray-100 rounded-xl">
+        <p class="text-sm text-gray-700">⚠️ <strong>Note:</strong> This component does not resemble a functional select dropdown. For the full component, please see the <code>NeoLabeledSelect</code> molecule component.</p>
+        <p class="text-sm text-gray-700 mt-2">See: <code>Molecules/NeoLabeledSelect</code> in Storybook</p>
+      </div>
     `,
 })
 

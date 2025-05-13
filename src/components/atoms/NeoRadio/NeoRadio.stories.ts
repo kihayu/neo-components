@@ -44,36 +44,36 @@ export const Default: Story = {
       return { args, selected }
     },
     template: `
-      <div class="space-y-2">
-        <NeoRadio 
-          id="radio-1"
-          v-model="selected"
-          value="option1"
-          :name="args.name"
-          :disabled="args.disabled"
-        >
-          Option 1
-        </NeoRadio>
-        <NeoRadio 
-          id="radio-2"
-          v-model="selected"
-          value="option2"
-          :name="args.name"
-          :disabled="args.disabled"
-        >
-          Option 2
-        </NeoRadio>
-        <NeoRadio 
-          id="radio-3"
-          v-model="selected"
-          value="option3"
-          :name="args.name"
-          :disabled="args.disabled"
-        >
-          Option 3
-        </NeoRadio>
-        <div class="mt-4">Selected value: {{ selected }}</div>
-      </div>
+      <NeoRadio
+        id="radio-1"
+        v-model="selected"
+        value="option1"
+        :name="args.name"
+        :disabled="args.disabled"
+      >
+        Option 1
+      </NeoRadio>
+    `,
+  }),
+}
+
+export const Unchecked: Story = {
+  render: (args) => ({
+    components: { NeoRadio },
+    setup() {
+      const selected = ref(null)
+      return { args, selected }
+    },
+    template: `
+      <NeoRadio
+        id="radio-1"
+        v-model="selected"
+        value="option1"
+        :name="args.name"
+        :disabled="args.disabled"
+      >
+        Option 1
+      </NeoRadio>
     `,
   }),
 }
@@ -85,31 +85,45 @@ export const Disabled: Story = {
       const selected = ref(args.modelValue)
       return { args, selected }
     },
+    args: {
+      modelValue: 'option1',
+      disabled: true,
+    },
     template: `
-      <div class="space-y-2">
-        <NeoRadio 
-          id="radio-disabled-1"
-          v-model="selected"
-          value="option1"
-          :name="args.name"
-          disabled
-        >
-          Disabled Option 1
-        </NeoRadio>
-        <NeoRadio 
-          id="radio-disabled-2"
-          v-model="selected"
-          value="option2"
-          :name="args.name"
-          disabled
-        >
-          Disabled Option 2
-        </NeoRadio>
-      </div>
+      <NeoRadio
+        id="radio-disabled-1"
+        v-model="selected"
+        value="option1"
+        :name="args.name"
+        disabled
+      >
+        Disabled Option 1
+      </NeoRadio>
     `,
   }),
-  args: {
-    modelValue: 'option1',
-    disabled: true,
-  },
+}
+
+export const DisabledUnchecked: Story = {
+  render: (args) => ({
+    components: { NeoRadio },
+    setup() {
+      const selected = ref(null)
+      return { args, selected }
+    },
+    args: {
+      modelValue: 'option1',
+      disabled: true,
+    },
+    template: `
+      <NeoRadio
+        id="radio-disabled-1"
+        v-model="selected"
+        value="option1"
+        :name="args.name"
+        disabled
+      >
+        Disabled Option 1
+      </NeoRadio>
+    `,
+  }),
 }

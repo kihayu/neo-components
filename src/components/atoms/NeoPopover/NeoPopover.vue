@@ -28,7 +28,7 @@
           v-if="open"
           ref="popoverRef"
           :id="popoverId"
-          class="font-primary fixed z-50 min-w-[200px] rounded-xl border-4 border-black bg-white p-3 text-black"
+          class="fixed z-50 min-w-[200px] rounded-xl border-4 border-black bg-white p-4 text-black"
           :class="positionClass"
           :style="{ top: `${popoverTop}px`, left: `${popoverLeft}px` }"
           :role="role"
@@ -37,12 +37,17 @@
           :aria-describedby="`${popoverId}-desc`"
         >
           <div class="relative z-10" :id="`${popoverId}-desc`" @click="handleClickInSlot">
-            <slot></slot>
+            <div v-if="$slots.header" class="font-primary">
+              <slot name="header" />
+            </div>
+            <div v-if="$slots.default" class="font-secondary">
+              <slot />
+            </div>
           </div>
 
           <button
             v-if="dismissible"
-            class="absolute top-2 right-2 z-20 rounded-full p-1 hover:bg-black/10 focus:outline-none focus-visible:ring-2"
+            class="absolute top-2 right-2 z-20 rounded-full p-1 hover:cursor-pointer hover:bg-black/10 focus:outline-none focus-visible:ring-2"
             @click="closePopover"
             aria-label="Close popover"
           >

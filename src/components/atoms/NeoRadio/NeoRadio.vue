@@ -42,7 +42,7 @@
           :class="{ 'bg-utility-light': disabled }"
         ></motion.div>
       </motion.div>
-      <span :class="{ 'text-gray-500': disabled }">
+      <span class="font-primary" :class="{ 'text-gray-500': disabled }">
         <slot />
       </span>
     </motion.label>
