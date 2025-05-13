@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: neo-components
+    container_name: neo-components-container
+    ports:
+      - '6006:80'
+    restart: unless-stopped
