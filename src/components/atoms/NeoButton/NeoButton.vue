@@ -6,17 +6,14 @@
         y: extendedShadow && !disabled ? -6 : 0,
       }"
       :while-hover="{
-        scale: disabled ? 1 : extendOnHover ? 1.05 : 1,
         x: disabled ? 0 : extendOnHover ? -4 : 0,
         y: disabled ? 0 : extendOnHover ? -6 : 0,
       }"
       :while-press="{
-        scale: 1.0,
         x: 0,
         y: 0,
       }"
       :while-focus="{
-        scale: 1.0,
         x: extendedShadow ? 0 : -4,
         y: extendedShadow ? 0 : -6,
       }"
