@@ -8,12 +8,12 @@
         xmlns="http://www.w3.org/2000/svg"
         class="relative z-10"
       >
-        <circle stroke="#eee" fill="none" stroke-width="3" cx="19" cy="19" r="15" />
+        <circle stroke="oklch(88.58% 0 0)" fill="none" stroke-width="6" cx="19" cy="19" r="15" />
         <path
           :class="animationClass"
           fill="none"
-          stroke="#000"
-          stroke-width="3"
+          stroke="oklch(18.74% 0 0)"
+          stroke-width="6"
           stroke-linecap="round"
           d="M 19,4 a 15,15 0 0,1 0,30"
         />
