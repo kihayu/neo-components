@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 
 import NeoButton, { type NeoButtonProps } from './NeoButton.vue'
 
-const meta = {
+const meta: Meta<typeof NeoButton> = {
   title: 'Atoms/NeoButton',
   component: NeoButton,
   tags: ['autodocs'],
@@ -25,7 +25,7 @@ const defaultArgs = {
   size: 'medium',
   type: 'primary',
   disabled: false,
-  extendedShadow: true,
+  extendedShadow: false,
   default: 'Button',
 } as NeoButtonProps
 
@@ -41,7 +41,7 @@ const renderFunction = (args: NeoButtonProps) => ({
   `,
 })
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
     ...defaultArgs,
   },
@@ -55,10 +55,10 @@ export const Primary: Story = {
   },
 }
 
-export const NoShadow: Story = {
+export const Shadow: Story = {
   args: {
     ...defaultArgs,
-    extendedShadow: false,
+    extendedShadow: true,
   },
   render: (args) => renderFunction(args),
 }

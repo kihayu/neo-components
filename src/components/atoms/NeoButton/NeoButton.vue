@@ -6,9 +6,9 @@
         y: extendedShadow && !disabled ? -6 : 0,
       }"
       :while-hover="{
-        scale: disabled ? 1 : 1.05,
-        x: -4,
-        y: -6,
+        scale: disabled ? 1 : extendOnHover ? 1.05 : 1,
+        x: disabled ? 0 : extendOnHover ? -4 : 0,
+        y: disabled ? 0 : extendOnHover ? -6 : 0,
       }"
       :while-press="{
         scale: 1.0,
@@ -47,13 +47,15 @@ export interface NeoButtonProps {
   type?: ButtonType
   disabled?: boolean
   extendedShadow?: boolean
+  extendOnHover?: boolean
 }
 
 const props = withDefaults(defineProps<NeoButtonProps>(), {
   size: 'medium',
   type: 'primary',
   disabled: false,
-  extendedShadow: true,
+  extendedShadow: false,
+  extendOnHover: true,
 })
 
 const buttonClasses = computed(() => {
