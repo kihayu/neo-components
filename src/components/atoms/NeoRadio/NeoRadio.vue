@@ -18,7 +18,7 @@
         />
         <motion.div
           :while-hover="{
-            scale: disabled ? 1 : 1.05,
+            scale: disabled ? 1 : 1.15,
           }"
           :while-press="{
             scale: 1.0,
