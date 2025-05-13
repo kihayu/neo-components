@@ -151,15 +151,16 @@ export const Interactive: Story = {
     components: { NeoAvatar },
     setup() {
       const handleClick = () => {
-        alert('Avatar clicked!')
+        // alert('Avatar clicked!')
+        console.log('Avatar clicked!')
       }
-      
+
       return { args, handleClick }
     },
     template: `
-      <NeoAvatar 
-        v-bind="args" 
-        interactive 
+      <NeoAvatar
+        v-bind="args"
+        interactive
         aria-label="Click me"
         @click="handleClick"
       />
