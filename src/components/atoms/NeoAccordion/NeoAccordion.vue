@@ -2,7 +2,7 @@
   <div class="w-full">
     <motion.div class="relative">
       <motion.button
-        class="font-primary relative z-10 flex w-full items-center justify-between rounded-t-xl border-4 border-black bg-white px-4 py-3 transition-all duration-300 hover:bg-gray-50"
+        class="font-primary disabled:border-utility group relative z-10 flex w-full cursor-pointer items-center justify-between rounded-t-xl border-4 border-black bg-white px-4 py-3 transition-all duration-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:hover:bg-white"
         :class="{ 'rounded-b-xl': !isOpen }"
         :aria-expanded="isOpen"
         :aria-controls="contentId"
@@ -12,12 +12,12 @@
         @click="toggleAccordion"
         type="button"
       >
-        <span class="font-semibold">
+        <span class="group-disabled:text-utility font-semibold">
           <slot name="header">{{ title }}</slot>
         </span>
         <ChevronDown
-          :size="16"
-          class="transform transition-transform duration-300"
+          :size="24"
+          class="group-disabled:text-utility transform transition-transform duration-300"
           :class="{ 'rotate-180': isOpen }"
           aria-hidden="true"
         />
