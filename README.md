@@ -22,15 +22,17 @@ A Vue 3 component library featuring uncompromising brutalist aesthetics with str
 + [ MOTION ]          Animation Library for smooth transitions
 ```
 
+## ▣▣▣ Preview ▣▣▣
+
+The public storybook instance of the component library can be found [here](https://neo-sb.keanuhie.com/).
+
 ## ▣▣▣ GETTING STARTED ▣▣▣
 
 ```
 ┌───────────────────┐
 │   PREREQUISITES   │
 └───────────────────┘
-```
 
-```diff
 ! BUN PACKAGE MANAGER // REQUIRED
 ```
 
@@ -38,63 +40,44 @@ A Vue 3 component library featuring uncompromising brutalist aesthetics with str
 ┌───────────────────┐
 │   INSTALLATION    │
 └───────────────────┘
-```
 
 1. Clone the repository
 
-```bash
-git clone git@github.com:kihayu/neo-components.git
-cd neo-components
-```
+> git clone git@github.com:kihayu/neo-components.git
+> cd neo-components
 
 2. Install dependencies
 
-```bash
-bun install --frozen-lockfile
+> bun install --frozen-lockfile
 ```
 
 ```
 ┌───────────────────┐
 │   DEVELOPMENT     │
 └───────────────────┘
-```
 
 Start the development server:
 
-```bash
-bun dev
+> bun run storybook
 ```
 
 ```
 ┌───────────────────────────────────┐
 │   PRODUCTION BUILD                │
 └───────────────────────────────────┘
-```
 
-```bash
-bun run build
-```
-
-```
-┌───────────────────┐
-│   UNIT TESTS      │
-└───────────────────┘
-```
-
-```bash
-bun test:unit
+> bun run storybook-build
 ```
 
 ```
 ┌───────────────────┐
 │   LINTING         │
 └───────────────────┘
+
+> bun lint
 ```
 
-```bash
-bun lint
-```
-
+## ▣▣▣ LICENSE ▣▣▣
 
 ```
 ╔═══════════════════════════════════════════════╗
