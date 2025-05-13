@@ -21,7 +21,7 @@
         leave-to-class="opacity-0 scale-95"
       >
         <div
-          v-if="isVisible"
+          v-show="isVisible"
           ref="tooltipRef"
           role="tooltip"
           id="neo-tooltip"

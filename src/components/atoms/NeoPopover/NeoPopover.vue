@@ -1,62 +1,59 @@
 <template>
-  <div class="relative inline-block">
-    <div
-      ref="triggerRef"
-      @click="togglePopover"
-      @keydown.enter="togglePopover"
-      @keydown.space="togglePopover"
-      class="inline-block"
-      :tabindex="disabled ? undefined : 0"
-      role="button"
-      :aria-expanded="open"
-      :aria-controls="popoverId"
-      :aria-disabled="disabled ? 'true' : undefined"
-    >
-      <slot name="trigger"></slot>
-    </div>
-
-    <Teleport to="body">
-      <transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="opacity-0 scale-95"
-        enter-to-class="opacity-100 scale-100"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="opacity-100 scale-100"
-        leave-to-class="opacity-0 scale-95"
-      >
-        <div
-          v-if="open"
-          ref="popoverRef"
-          :id="popoverId"
-          class="fixed z-50 min-w-[200px] rounded-xl border-4 border-black bg-white p-4 text-black"
-          :class="positionClass"
-          :style="{ top: `${popoverTop}px`, left: `${popoverLeft}px` }"
-          :role="role"
-          aria-modal="true"
-          :aria-labelledby="`${popoverId}-title`"
-          :aria-describedby="`${popoverId}-desc`"
-        >
-          <div class="relative z-10" :id="`${popoverId}-desc`" @click="handleClickInSlot">
-            <div v-if="$slots.header" class="font-primary">
-              <slot name="header" />
-            </div>
-            <div v-if="$slots.default" class="font-secondary">
-              <slot />
-            </div>
-          </div>
-
-          <button
-            v-if="dismissible"
-            class="absolute top-2 right-2 z-20 rounded-full p-1 hover:cursor-pointer hover:bg-black/10 focus:outline-none focus-visible:ring-2"
-            @click="closePopover"
-            aria-label="Close popover"
-          >
-            <X :size="16" aria-hidden="true" />
-          </button>
-        </div>
-      </transition>
-    </Teleport>
+  <div
+    ref="triggerRef"
+    @click="togglePopover"
+    @keydown.enter="togglePopover"
+    @keydown.space="togglePopover"
+    :tabindex="disabled ? undefined : 0"
+    role="button"
+    :aria-expanded="open"
+    :aria-controls="popoverId"
+    :aria-disabled="disabled ? 'true' : undefined"
+  >
+    <slot name="trigger"></slot>
   </div>
+
+  <Teleport to="body">
+    <transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
+    >
+      <div
+        v-show="open"
+        ref="popoverRef"
+        :id="popoverId"
+        class="fixed z-50 min-w-[200px] rounded-xl border-4 border-black bg-white p-4 text-black"
+        :class="positionClass"
+        :style="{ top: `${popoverTop}px`, left: `${popoverLeft}px` }"
+        :role="role"
+        aria-modal="true"
+        :aria-labelledby="`${popoverId}-title`"
+        :aria-describedby="`${popoverId}-desc`"
+      >
+        <div class="relative z-10" :id="`${popoverId}-desc`" @click="handleClickInSlot">
+          <div v-if="$slots.header" class="font-primary">
+            <slot name="header" />
+          </div>
+          <div v-if="$slots.default" class="font-secondary">
+            <slot />
+          </div>
+        </div>
+
+        <button
+          v-if="dismissible"
+          class="absolute top-2 right-2 z-20 rounded-full p-1 hover:cursor-pointer hover:bg-black/10 focus:outline-none focus-visible:ring-2"
+          @click="closePopover"
+          aria-label="Close popover"
+        >
+          <X :size="16" aria-hidden="true" />
+        </button>
+      </div>
+    </transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
