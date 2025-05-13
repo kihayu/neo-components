@@ -17,29 +17,18 @@
       <slot />
     </div>
     <div class="pointer-events-none absolute top-1/2 right-2 z-20 -translate-x-1 -translate-y-1.5">
-      <svg
+      <ChevronDown
+        :size="12"
         class="transition-transform duration-200"
         :class="{ 'rotate-180': selectOpen }"
-        width="12"
-        height="12"
-        viewBox="0 0 12 12"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M2.5 4.5L6 8L9.5 4.5"
-          stroke="black"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
+import { ChevronDown } from 'lucide-vue-next'
 
 export interface NeoSelectProps {
   id: string

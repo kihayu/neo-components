@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import NeoSelect, { type NeoSelectProps } from './NeoSelect.vue'
 import NeoOption from '../NeoOption/NeoOption.vue'
 
-const meta = {
+const meta: Meta<typeof NeoSelect> = {
   title: 'Atoms/NeoSelect',
   component: NeoSelect,
   tags: ['autodocs'],
@@ -32,7 +32,7 @@ const renderFunction = (args: NeoSelectProps) => ({
     `,
 })
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
     ...defaultArgs,
   },
