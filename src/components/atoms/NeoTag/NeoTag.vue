@@ -6,7 +6,7 @@
         y: 0,
       }"
       :while-hover="{
-        x: dismissible ? -6 : 0,
+        x: dismissible ? -3 : 0,
         y: dismissible ? -4 : 0,
       }"
       class="font-primary relative z-10 flex transform items-center rounded-full border-4 border-black px-4 py-1.5 transition-colors duration-100"
@@ -21,7 +21,7 @@
       <motion.button
         v-if="dismissible"
         type="button"
-        class="absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-0.5 hover:bg-black/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+        class="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-0.5 hover:bg-black/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         aria-label="Remove tag"
         @click="onDismiss"
       >
