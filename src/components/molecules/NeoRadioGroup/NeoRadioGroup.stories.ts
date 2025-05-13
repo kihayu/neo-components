@@ -19,9 +19,9 @@ const meta: Meta<typeof NeoRadioGroup> = {
       control: 'text',
       description: 'Name attribute for the radio inputs',
     },
-    label: {
+    legend: {
       control: 'text',
-      description: 'Label for the radio group',
+      description: 'Legend for the radio group',
     },
     helperText: {
       control: 'text',
@@ -49,7 +49,7 @@ const meta: Meta<typeof NeoRadioGroup> = {
       { label: 'Option 3', value: 'option3' },
     ],
     name: 'radio-group',
-    label: 'Select an option',
+    legend: 'Select an option',
     helperText: 'Choose the option that best fits your needs',
     disabled: false,
     required: false,
@@ -65,9 +65,9 @@ export const Default: Story = {
     components: { NeoRadioGroup },
     setup() {
       const selectedValue = ref(args.modelValue)
-      return { 
+      return {
         args,
-        selectedValue
+        selectedValue,
       }
     },
     template: `
@@ -75,7 +75,7 @@ export const Default: Story = {
         v-model="selectedValue"
         :options="args.options"
         :name="args.name"
-        :label="args.label"
+        :legend="args.legend"
         :helper-text="args.helperText"
         :disabled="args.disabled"
         :required="args.required"
@@ -93,9 +93,9 @@ export const Horizontal: Story = {
     components: { NeoRadioGroup },
     setup() {
       const selectedValue = ref(args.modelValue)
-      return { 
+      return {
         args,
-        selectedValue
+        selectedValue,
       }
     },
     template: `
@@ -103,7 +103,7 @@ export const Horizontal: Story = {
         v-model="selectedValue"
         :options="args.options"
         :name="args.name"
-        :label="args.label"
+        :legend="args.legend"
         :helper-text="args.helperText"
         :disabled="args.disabled"
         :required="args.required"
@@ -123,10 +123,10 @@ export const WithDisabledOptions: Story = {
         { label: 'Disabled option', value: 'option2', disabled: true },
         { label: 'Another available option', value: 'option3' },
       ]
-      return { 
+      return {
         selectedValue,
         options,
-        args
+        args,
       }
     },
     template: `
@@ -134,7 +134,7 @@ export const WithDisabledOptions: Story = {
         v-model="selectedValue"
         :options="options"
         :name="args.name"
-        :label="args.label"
+        :legend="args.legend"
         :helper-text="args.helperText"
         :required="args.required"
         :orientation="args.orientation"
@@ -148,9 +148,9 @@ export const AllDisabled: Story = {
     components: { NeoRadioGroup },
     setup() {
       const selectedValue = ref(args.modelValue)
-      return { 
+      return {
         args,
-        selectedValue
+        selectedValue,
       }
     },
     template: `
@@ -158,7 +158,7 @@ export const AllDisabled: Story = {
         v-model="selectedValue"
         :options="args.options"
         :name="args.name"
-        :label="args.label"
+        :legend="args.legend"
         :helper-text="args.helperText"
         disabled
         :required="args.required"

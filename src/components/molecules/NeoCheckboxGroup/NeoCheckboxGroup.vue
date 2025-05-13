@@ -1,19 +1,16 @@
 <template>
   <fieldset class="space-y-2">
-    <legend v-if="label" class="font-primary mb-2 font-semibold">
-      {{ label }}
-    </legend>
-    <div 
-      class="flex" 
-      :class="[
-        orientation === 'vertical' ? 'flex-col space-y-2' : 'flex-row space-x-4',
-      ]"
+    <NeoLegend v-if="legend">
+      {{ legend }}
+    </NeoLegend>
+    <div
+      class="flex"
+      :class="[orientation === 'vertical' ? 'flex-col space-y-2' : 'flex-row space-x-4']"
       role="group"
-      :aria-labelledby="labelId"
       :aria-required="required"
     >
-      <NeoCheckbox 
-        v-for="option in options" 
+      <NeoCheckbox
+        v-for="option in options"
         :key="option.value"
         :id="`${name}-${option.value}`"
         :model-value="isSelected(option.value)"
@@ -23,18 +20,15 @@
         {{ option.label }}
       </NeoCheckbox>
     </div>
-    <p 
-      v-if="helperText" 
-      class="text-sm text-gray-600 mt-1"
-    >
+    <p v-if="helperText" class="mt-1 text-sm text-gray-600">
       {{ helperText }}
     </p>
   </fieldset>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import NeoCheckbox from '@/components/atoms/NeoCheckbox/NeoCheckbox.vue'
+import NeoLegend from '@/components/atoms/NeoLegend/NeoLegend.vue'
 
 export type CheckboxOption<T = string | number> = {
   label: string
@@ -46,7 +40,7 @@ export interface NeoCheckboxGroupProps<T = string | number> {
   modelValue: T[]
   options: CheckboxOption<T>[]
   name: string
-  label?: string
+  legend?: string
   helperText?: string
   disabled?: boolean
   required?: boolean
@@ -57,7 +51,7 @@ const props = withDefaults(defineProps<NeoCheckboxGroupProps<string | number>>()
   disabled: false,
   required: false,
   orientation: 'vertical',
-  label: '',
+  legend: '',
   helperText: '',
 })
 
@@ -67,15 +61,13 @@ interface NeoCheckboxGroupEmits<T = string | number> {
 
 const emit = defineEmits<NeoCheckboxGroupEmits<string | number>>()
 
-const labelId = computed(() => `${props.name}-label`)
-
 const isSelected = <T extends string | number>(value: T): boolean => {
   return props.modelValue.includes(value)
 }
 
 const updateValue = <T extends string | number>(value: T, checked: boolean) => {
   const newValue = [...props.modelValue]
-  
+
   if (checked && !newValue.includes(value)) {
     newValue.push(value)
   } else if (!checked) {
@@ -84,7 +76,7 @@ const updateValue = <T extends string | number>(value: T, checked: boolean) => {
       newValue.splice(index, 1)
     }
   }
-  
+
   emit('update:modelValue', newValue)
 }
 </script>

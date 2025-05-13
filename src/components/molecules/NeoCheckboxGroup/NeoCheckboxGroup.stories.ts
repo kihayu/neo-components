@@ -19,9 +19,9 @@ const meta: Meta<typeof NeoCheckboxGroup> = {
       control: 'text',
       description: 'Base name attribute for the checkbox inputs',
     },
-    label: {
+    legend: {
       control: 'text',
-      description: 'Label for the checkbox group',
+      description: 'Legend for the checkbox group',
     },
     helperText: {
       control: 'text',
@@ -50,7 +50,7 @@ const meta: Meta<typeof NeoCheckboxGroup> = {
       { label: 'Option 4', value: 'option4' },
     ],
     name: 'checkbox-group',
-    label: 'Select all that apply',
+    legend: 'Select all that apply',
     helperText: 'You can select multiple options',
     disabled: false,
     required: false,
@@ -66,9 +66,9 @@ export const Default: Story = {
     components: { NeoCheckboxGroup },
     setup() {
       const selectedValues = ref([...args.modelValue])
-      return { 
+      return {
         args,
-        selectedValues
+        selectedValues,
       }
     },
     template: `
@@ -76,7 +76,7 @@ export const Default: Story = {
         v-model="selectedValues"
         :options="args.options"
         :name="args.name"
-        :label="args.label"
+        :legend="args.legend"
         :helper-text="args.helperText"
         :disabled="args.disabled"
         :required="args.required"
@@ -94,9 +94,9 @@ export const Horizontal: Story = {
     components: { NeoCheckboxGroup },
     setup() {
       const selectedValues = ref([...args.modelValue])
-      return { 
+      return {
         args,
-        selectedValues
+        selectedValues,
       }
     },
     template: `
@@ -104,7 +104,7 @@ export const Horizontal: Story = {
         v-model="selectedValues"
         :options="args.options"
         :name="args.name"
-        :label="args.label"
+        :legend="args.legend"
         :helper-text="args.helperText"
         :disabled="args.disabled"
         :required="args.required"
@@ -125,10 +125,10 @@ export const WithDisabledOptions: Story = {
         { label: 'Another available option', value: 'option3' },
         { label: 'Another disabled option', value: 'option4', disabled: true },
       ]
-      return { 
+      return {
         selectedValues,
         options,
-        args
+        args,
       }
     },
     template: `
@@ -136,7 +136,7 @@ export const WithDisabledOptions: Story = {
         v-model="selectedValues"
         :options="options"
         :name="args.name"
-        :label="args.label"
+        :legend="args.legend"
         :helper-text="args.helperText"
         :required="args.required"
         :orientation="args.orientation"
@@ -150,9 +150,9 @@ export const AllDisabled: Story = {
     components: { NeoCheckboxGroup },
     setup() {
       const selectedValues = ref([...args.modelValue])
-      return { 
+      return {
         args,
-        selectedValues
+        selectedValues,
       }
     },
     template: `
@@ -160,7 +160,7 @@ export const AllDisabled: Story = {
         v-model="selectedValues"
         :options="args.options"
         :name="args.name"
-        :label="args.label"
+        :legend="args.legend"
         :helper-text="args.helperText"
         disabled
         :required="args.required"
@@ -175,9 +175,9 @@ export const EmptySelection: Story = {
     components: { NeoCheckboxGroup },
     setup() {
       const selectedValues = ref<string[]>([])
-      return { 
+      return {
         args,
-        selectedValues
+        selectedValues,
       }
     },
     template: `
@@ -185,7 +185,7 @@ export const EmptySelection: Story = {
         v-model="selectedValues"
         :options="args.options"
         :name="args.name"
-        :label="args.label"
+        :legend="args.legend"
         :helper-text="args.helperText"
         :disabled="args.disabled"
         :required="args.required"
