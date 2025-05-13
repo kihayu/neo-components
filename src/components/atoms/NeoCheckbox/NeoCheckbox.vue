@@ -23,7 +23,7 @@
           @change="onInput"
         />
         <motion.div
-          class="peer-checked:bg-primary relative z-10 h-6 w-6 transform rounded-md border-4 border-black bg-white transition-colors duration-100 peer-focus-visible:outline-4 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-black"
+          class="peer-checked:bg-primary relative z-10 h-7 w-7 transform rounded-md border-4 border-black bg-white transition-colors duration-100 peer-focus-visible:outline-4 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-black"
         ></motion.div>
         <motion.div
           :initial="{ opacity: 0 }"
