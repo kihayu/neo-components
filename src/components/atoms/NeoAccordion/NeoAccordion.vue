@@ -2,7 +2,7 @@
   <div class="w-full">
     <motion.div class="relative">
       <motion.button
-        class="font-primary relative z-10 flex w-full items-center justify-between rounded-t-xl border-4 border-black bg-white px-4 py-3 transition-colors duration-100 hover:bg-gray-50"
+        class="font-primary relative z-10 flex w-full items-center justify-between rounded-t-xl border-4 border-black bg-white px-4 py-3 transition-all duration-300 hover:bg-gray-50"
         :class="{ 'rounded-b-xl': !isOpen }"
         :aria-expanded="isOpen"
         :aria-controls="contentId"
@@ -29,6 +29,8 @@
         v-show="isOpen"
         :key="`accordion-${contentId}`"
         :animate="{
+          y: isOpen ? 0 : -10,
+          opacity: isOpen ? 1 : 0,
           height: isOpen ? 'auto' : '0px',
         }"
         :initial="false"
