@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 
 import NeoLabeledInput, { type NeoLabeledInputProps } from './NeoLabeledInput.vue'
 
-const meta = {
+const meta: Meta<typeof NeoLabeledInput> = {
   title: 'Molecules/NeoLabeledInput',
   component: NeoLabeledInput,
   tags: ['autodocs'],
@@ -36,7 +36,7 @@ const renderFunction = (args: NeoLabeledInputProps) => ({
   `,
 })
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
     ...defaultArgs,
   },

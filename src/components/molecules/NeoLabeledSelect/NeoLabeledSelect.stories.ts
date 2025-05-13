@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import NeoLabeledSelect, { type NeoLabeledSelectProps } from './NeoLabeledSelect.vue'
 import NeoOption from '@/components/atoms/NeoOption/NeoOption.vue'
 
-const meta = {
+const meta: Meta<typeof NeoLabeledSelect> = {
   title: 'Molecules/NeoLabeledSelect',
   component: NeoLabeledSelect,
   tags: ['autodocs'],
@@ -38,7 +38,7 @@ const renderFunction = (args: NeoLabeledSelectProps) => ({
     `,
 })
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
     ...defaultArgs,
   },

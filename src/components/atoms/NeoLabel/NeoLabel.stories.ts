@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 
 import NeoLabel, { type NeoLabelProps } from './NeoLabel.vue'
 
-const meta = {
+const meta: Meta<typeof NeoLabel> = {
   title: 'Atoms/NeoLabel',
   component: NeoLabel,
   tags: ['autodocs'],
@@ -32,7 +32,7 @@ const renderFunction = (args: NeoLabelProps) => ({
   `,
 })
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
     ...defaultArgs,
   },

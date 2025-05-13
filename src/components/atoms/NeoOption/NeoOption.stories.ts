@@ -32,7 +32,7 @@ const renderFunction = (args: NeoOptionProps) => ({
   `,
 })
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
     ...defaultArgs,
   },

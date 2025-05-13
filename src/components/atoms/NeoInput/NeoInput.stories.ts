@@ -29,7 +29,7 @@ const renderFunction = (args: NeoInputProps) => ({
   `,
 })
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
     ...defaultArgs,
   },
