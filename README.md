@@ -1,45 +1,108 @@
-# neo-components
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-bun install
+```
+███╗   ██╗███████╗ ██████╗          ██████╗ ██████╗ ███╗   ███╗██████╗  ██████╗ ███╗   ██╗███████╗███╗   ██╗████████╗███████╗
+████╗  ██║██╔════╝██╔═══██╗        ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔═══██╗████╗  ██║██╔════╝████╗  ██║╚══██╔══╝██╔════╝
+██╔██╗ ██║█████╗  ██║   ██║        ██║     ██║   ██║██╔████╔██║██████╔╝██║   ██║██╔██╗ ██║█████╗  ██╔██╗ ██║   ██║   ███████╗
+██║╚██╗██║██╔══╝  ██║   ██║        ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██║   ██║██║╚██╗██║██╔══╝  ██║╚██╗██║   ██║   ╚════██║
+██║ ╚████║███████╗╚██████╔╝███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ╚██████╔╝██║ ╚████║███████╗██║ ╚████║   ██║   ███████║
+╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝      ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝
 ```
 
-### Compile and Hot-Reload for Development
+> **【 A MODERN BRUTALIST DESIGN SYSTEM 】**
 
-```sh
+A Vue 3 component library featuring uncompromising brutalist aesthetics with strict TypeScript typing and atomic design principles. Bold. Raw. Functional.
+
+## ▨▨▨ TECH STACK ▨▨▨
+
+```diff
++ [ VUE 3 ]           Modern, Progressive JavaScript Framework with Composition API
++ [ VITE ]            Next Generation Frontend Tooling
++ [ TAILWINDCSS ]     Utility-First CSS Framework
++ [ LUCIDE ]          Beautiful & Consistent Icons
++ [ VITEST ]          Next Generation Testing Framework
++ [ STORYBOOK ]       Frontend Workshop for UI Development
++ [ MOTION ]          Animation Library for smooth transitions
+```
+
+## ▣▣▣ GETTING STARTED ▣▣▣
+
+```
+┌───────────────────┐
+│   PREREQUISITES   │
+└───────────────────┘
+```
+
+```diff
+! BUN PACKAGE MANAGER // REQUIRED
+```
+
+```
+┌───────────────────┐
+│   INSTALLATION    │
+└───────────────────┘
+```
+
+1. Clone the repository
+
+```bash
+git clone git@github.com:kihayu/neo-components.git
+cd neo-components
+```
+
+2. Install dependencies
+
+```bash
+bun install --frozen-lockfile
+```
+
+```
+┌───────────────────┐
+│   DEVELOPMENT     │
+└───────────────────┘
+```
+
+Start the development server:
+
+```bash
 bun dev
 ```
 
-### Type-Check, Compile and Minify for Production
+```
+┌───────────────────────────────────┐
+│   PRODUCTION BUILD                │
+└───────────────────────────────────┘
+```
 
-```sh
+```bash
 bun run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+```
+┌───────────────────┐
+│   UNIT TESTS      │
+└───────────────────┘
+```
 
-```sh
+```bash
 bun test:unit
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+```
+┌───────────────────┐
+│   LINTING         │
+└───────────────────┘
+```
 
-```sh
+```bash
 bun lint
 ```
+
+
+```
+╔═══════════════════════════════════════════════╗
+║  MIT LICENSE                                  ║
+║  Copyright © 2025                             ║
+║  Permission is hereby granted, free of charge ║
+╚═══════════════════════════════════════════════╝
+```
+
+See the [LICENSE](LICENSE) file for full details.
