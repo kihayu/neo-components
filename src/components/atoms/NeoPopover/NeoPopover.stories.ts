@@ -148,7 +148,7 @@ export const Dismissible: Story = {
           v-bind="args"
         >
           <template #trigger>
-            <NeoButton disabled="true">With Close Button</NeoButton>
+            <NeoButton>With Close Button</NeoButton>
           </template>
           <div class="p-3 w-64">
             <h3 class="text-lg font-bold mb-2">Dismissible Popover</h3>
@@ -160,6 +160,7 @@ export const Dismissible: Story = {
   }),
   args: {
     dismissible: true,
+    closeOnClickOutside: false,
   },
 }
 
@@ -217,6 +218,9 @@ export const ComplexContent: Story = {
       </div>
     `,
   }),
+  args: {
+    closeOnClickInSlot: true,
+  },
 }
 
 export const DisabledState: Story = {

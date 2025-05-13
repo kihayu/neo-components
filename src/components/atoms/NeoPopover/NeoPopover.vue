@@ -36,7 +36,7 @@
           :aria-labelledby="`${popoverId}-title`"
           :aria-describedby="`${popoverId}-desc`"
         >
-          <div class="relative z-10" :id="`${popoverId}-desc`">
+          <div class="relative z-10" :id="`${popoverId}-desc`" @click="handleClickInSlot">
             <slot></slot>
           </div>
 
@@ -67,6 +67,7 @@ export interface NeoPopoverProps {
   dismissible?: boolean
   closeOnClickOutside?: boolean
   closeOnEsc?: boolean
+  closeOnClickInSlot?: boolean
   offsetDistance?: number
   role?: PopoverRole
   id?: string
@@ -79,6 +80,7 @@ const props = withDefaults(defineProps<NeoPopoverProps>(), {
   dismissible: false,
   closeOnClickOutside: true,
   closeOnEsc: true,
+  closeOnClickInSlot: false,
   offsetDistance: 8,
   role: 'dialog',
   id: '',
@@ -190,6 +192,12 @@ const handleClickOutside = (event: MouseEvent) => {
 
 const handleEscKey = (event: KeyboardEvent) => {
   if (open.value && props.closeOnEsc && event.key === 'Escape') {
+    closePopover()
+  }
+}
+
+const handleClickInSlot = () => {
+  if (props.closeOnClickInSlot) {
     closePopover()
   }
 }
