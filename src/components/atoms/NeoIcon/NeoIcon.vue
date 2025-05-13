@@ -1,7 +1,7 @@
 <template>
-  <div 
-    class="inline-flex items-center justify-center" 
-    :class="[colorClass]" 
+  <div
+    class="inline-flex items-center justify-center"
+    :class="[colorClass]"
     :style="{ transform: rotate !== 0 ? `rotate(${rotate}deg)` : undefined }"
     :aria-hidden="ariaHidden"
     :role="ariaHidden ? undefined : 'img'"
@@ -9,12 +9,7 @@
   >
     <!-- Clone and modify the icon if using Lucide -->
     <slot v-if="!$slots.default || !isLucideIcon" />
-    <component 
-      v-else 
-      :is="iconComponent" 
-      :size="pixelSize"
-      :stroke-width="strokeWidth"
-    />
+    <component v-else :is="iconComponent" :size="pixelSize" :stroke-width="strokeWidth" />
   </div>
 </template>
 
@@ -39,39 +34,37 @@ const props = withDefaults(defineProps<NeoIconProps>(), {
   rotate: 0,
   strokeWidth: 2,
   ariaHidden: true,
-  ariaLabel: 'Icon'
+  ariaLabel: 'Icon',
 })
 
 const slots = useSlots()
 
-// Check if slot content is a Lucide icon
 const isLucideIcon = computed(() => {
   if (!slots.default) return false
-  
+
   const slotContent = slots.default()
   if (slotContent.length !== 1) return false
-  
-  // Check component properties that are common in Lucide icons
+
   const component = slotContent[0]
-  return !!component.type && 
-         typeof component.type === 'object' &&
-         'render' in component.type &&
-         'props' in component.type &&
-         'size' in component.type.props &&
-         'strokeWidth' in component.type.props
+  return (
+    !!component.type &&
+    typeof component.type === 'object' &&
+    'render' in component.type &&
+    'props' in component.type &&
+    'size' in component.type.props &&
+    'strokeWidth' in component.type.props
+  )
 })
 
-// Get the slot content for modification
 const iconComponent = computed(() => {
   if (!slots.default || !isLucideIcon.value) return null
-  
+
   const slotContent = slots.default()
   if (slotContent.length !== 1) return null
-  
+
   return slotContent[0].type
 })
 
-// Size mappings
 const pixelSize = computed(() => {
   const sizes = {
     xs: 12,
@@ -79,7 +72,7 @@ const pixelSize = computed(() => {
     md: 24,
     lg: 32,
     xl: 40,
-    '2xl': 48
+    '2xl': 48,
   }
   return sizes[props.size]
 })
@@ -92,7 +85,7 @@ const colorClass = computed(() => {
     warning: 'text-yellow-500',
     black: 'text-black',
     white: 'text-white',
-    inherit: 'text-inherit'
+    inherit: 'text-inherit',
   }
   return colors[props.color]
 })

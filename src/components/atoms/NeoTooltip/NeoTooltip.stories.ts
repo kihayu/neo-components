@@ -3,7 +3,6 @@ import NeoTooltip from './NeoTooltip.vue'
 import NeoButton from '../NeoButton/NeoButton.vue'
 import NeoIcon from '../NeoIcon/NeoIcon.vue'
 
-// Import Lucide icons
 import { Info, HelpCircle } from 'lucide-vue-next'
 
 const meta: Meta<typeof NeoTooltip> = {

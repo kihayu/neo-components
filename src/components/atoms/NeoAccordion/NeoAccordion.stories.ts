@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import NeoAccordion from './NeoAccordion.vue'
 import NeoIcon from '../NeoIcon/NeoIcon.vue'
 
-// Import Lucide icons
 import { FileText } from 'lucide-vue-next'
 
 const meta: Meta<typeof NeoAccordion> = {
@@ -119,12 +118,12 @@ export const AccordionGroup: Story = {
   render: (args) => ({
     components: { NeoAccordion },
     setup() {
-      const openAccordion = ref(0);
-      
+      const openAccordion = ref(0)
+
       const toggle = (index: number) => {
-        openAccordion.value = openAccordion.value === index ? -1 : index;
+        openAccordion.value = openAccordion.value === index ? -1 : index
       }
-      
+
       return { args, openAccordion, toggle }
     },
     template: `
@@ -136,7 +135,7 @@ export const AccordionGroup: Story = {
         >
           <p>Content of the first accordion.</p>
         </NeoAccordion>
-        
+
         <NeoAccordion
           title="Second Accordion"
           :model-value="openAccordion === 1"
@@ -144,7 +143,7 @@ export const AccordionGroup: Story = {
         >
           <p>Content of the second accordion.</p>
         </NeoAccordion>
-        
+
         <NeoAccordion
           title="Third Accordion"
           :model-value="openAccordion === 2"

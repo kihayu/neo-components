@@ -1,6 +1,5 @@
 <template>
   <div class="relative inline-block">
-    <!-- Trigger element -->
     <div
       ref="triggerRef"
       @click="togglePopover"
@@ -16,7 +15,6 @@
       <slot name="trigger"></slot>
     </div>
 
-    <!-- Popover content -->
     <Teleport to="body">
       <transition
         enter-active-class="transition duration-200 ease-out"
@@ -42,7 +40,6 @@
             <slot></slot>
           </div>
 
-          <!-- Close button (if dismissible) -->
           <button
             v-if="dismissible"
             class="absolute top-2 right-2 z-20 rounded-full p-1 hover:bg-black/10 focus:outline-none focus-visible:ring-2"
@@ -101,7 +98,6 @@ const popoverTop = ref(0)
 const popoverLeft = ref(0)
 const popoverId = computed(() => props.id || `popover-${Math.random().toString(36).slice(2, 11)}`)
 
-// Position classes and offset calculations
 const positionClass = computed(() => {
   const baseClass = {
     top: 'origin-bottom',
@@ -112,18 +108,15 @@ const positionClass = computed(() => {
   return baseClass
 })
 
-// Toggle popover visibility
 const togglePopover = () => {
   if (props.disabled) return
   open.value = !open.value
 }
 
-// Close popover
 const closePopover = () => {
   open.value = false
 }
 
-// Update position when popover opens
 const updatePosition = async () => {
   await nextTick()
 
@@ -132,17 +125,14 @@ const updatePosition = async () => {
   const triggerRect = triggerRef.value.getBoundingClientRect()
   const popoverRect = popoverRef.value.getBoundingClientRect()
 
-  // Window dimensions
   const windowWidth = window.innerWidth
   const windowHeight = window.innerHeight
 
   const gap = props.offsetDistance
 
-  // Default positioning (for bottom)
   let top = 0
   let left = 0
 
-  // Positioning based on specified direction
   switch (props.position) {
     case 'top':
       top = triggerRect.top - popoverRect.height - gap * 1.5
@@ -160,35 +150,30 @@ const updatePosition = async () => {
       top = triggerRect.top + (triggerRect.height - popoverRect.height) / 2
       left = triggerRect.left - popoverRect.width - gap * 2.35
       break
-    default: // Fallback to bottom if position is invalid
+    default:
       top = triggerRect.bottom + gap
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
       break
   }
 
-  // Ensure popover stays within viewport boundaries
   const padding = 10
 
-  // Horizontal constraints
   if (left < padding) {
     left = padding
   } else if (left + popoverRect.width > windowWidth - padding) {
     left = windowWidth - popoverRect.width - padding
   }
 
-  // Vertical constraints
   if (top < padding) {
     top = padding
   } else if (top + popoverRect.height > windowHeight - padding) {
     top = windowHeight - popoverRect.height - padding
   }
 
-  // Set the positions
   popoverTop.value = top
   popoverLeft.value = left
 }
 
-// Handle click outside
 const handleClickOutside = (event: MouseEvent) => {
   if (!open.value || !props.closeOnClickOutside) return
 
@@ -203,14 +188,12 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 }
 
-// Handle ESC key
 const handleEscKey = (event: KeyboardEvent) => {
   if (open.value && props.closeOnEsc && event.key === 'Escape') {
     closePopover()
   }
 }
 
-// Watch for model changes
 watch(
   () => props.modelValue,
   (newValue) => {
@@ -223,7 +206,6 @@ watch(
   },
 )
 
-// Emit changes to parent
 watch(open, (newValue) => {
   emit('update:modelValue', newValue)
   if (newValue) {
@@ -233,51 +215,44 @@ watch(open, (newValue) => {
   }
 })
 
-// Set up resize observer to handle size changes
 const setupResizeObserver = () => {
   if (!popoverRef.value) return
-  
-  // Use ResizeObserver to detect changes to the popover size
+
   const resizeObserver = new ResizeObserver(() => {
     if (open.value) updatePosition()
   })
-  
+
   resizeObserver.observe(popoverRef.value)
-  
-  // Clean up on unmount
+
   onUnmounted(() => {
     resizeObserver.disconnect()
   })
 }
 
-// Set up and clean up event listeners
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
   document.addEventListener('keydown', handleEscKey)
   window.addEventListener('resize', updatePosition)
   window.addEventListener('scroll', updatePosition, true)
-  
-  // Add mutation observer to detect when content changes
+
   const observer = new MutationObserver(() => {
     if (open.value) updatePosition()
   })
-  
-  // Start observing when popover becomes visible
+
   watch(open, (newValue) => {
     if (newValue && popoverRef.value) {
       observer.observe(popoverRef.value, {
         childList: true,
         subtree: true,
         characterData: true,
-        attributes: true
+        attributes: true,
       })
       setupResizeObserver()
     } else {
       observer.disconnect()
     }
   })
-  
-  // Clean up on unmount
+
   onUnmounted(() => {
     observer.disconnect()
   })

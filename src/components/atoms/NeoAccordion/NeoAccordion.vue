@@ -86,7 +86,6 @@ const toggleAccordion = () => {
   emit('update:modelValue', isOpen.value)
 }
 
-// Watch for external changes to modelValue
 watch(
   () => props.modelValue,
   (newValue) => {

@@ -1,8 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import NeoIcon from './NeoIcon.vue'
 
-// Import Lucide icons
-import { Check, AlertCircle, AlertTriangle, Info, Heart, Plus, Settings, User, Home } from 'lucide-vue-next'
+import {
+  Check,
+  AlertCircle,
+  AlertTriangle,
+  Info,
+  Heart,
+  Plus,
+  Settings,
+  User,
+  Home,
+} from 'lucide-vue-next'
 
 const meta: Meta<typeof NeoIcon> = {
   title: 'Atoms/NeoIcon',

@@ -4,7 +4,6 @@ import NeoTabGroup from './NeoTabGroup.vue'
 import NeoTab from '@/components/atoms/NeoTab/NeoTab.vue'
 import NeoIcon from '@/components/atoms/NeoIcon/NeoIcon.vue'
 
-// Import Lucide icons
 import { Home, Users, Settings } from 'lucide-vue-next'
 
 const meta: Meta<typeof NeoTabGroup> = {
@@ -16,14 +15,9 @@ const meta: Meta<typeof NeoTabGroup> = {
       control: { type: 'number' },
       description: 'Index of the currently selected tab',
     },
-    animate: {
-      control: 'boolean',
-      description: 'Whether to animate the selection indicator',
-    },
   },
   args: {
     selectedTabIndex: 0,
-    animate: true,
   },
 }
 
@@ -47,7 +41,6 @@ export const Default: Story = {
     template: `
       <NeoTabGroup
         :selectedTabIndex="selectedTabIndex"
-        :animate="args.animate"
         @update:selectedTabIndex="updateSelectedTab"
       >
         <NeoTab
@@ -125,7 +118,6 @@ export const WithIcons: Story = {
     template: `
       <NeoTabGroup
         :selectedTabIndex="selectedTabIndex"
-        :animate="args.animate"
         @update:selectedTabIndex="updateSelectedTab"
       >
         <NeoTab

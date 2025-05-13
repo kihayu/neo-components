@@ -66,8 +66,6 @@ const buttonClasses = computed(() => {
     buttonClass.push('px-6 py-3 text-xl')
   }
 
-  // buttonClass.push(!props.extendedShadow ? '' : 'focus:outline-4 focus-visible:outline-4')
-
   const buttonTypeClasses = {
     primary:
       'bg-primary hover:bg-primary-dark focus:bg-primary-dark focus:outline-primary focus-visible:outline-primary disabled:hover:bg-primary!',

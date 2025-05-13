@@ -22,12 +22,10 @@
       ></motion.div>
     </AnimatePresence>
     <div class="z-30 flex">
-      <!-- Tabs (rendered via slot) -->
       <slot></slot>
     </div>
   </div>
 
-  <!-- Tab panels container -->
   <div class="border-4 border-t-0 border-black p-4" :style="{ width: `${tablistWidth}px` }">
     <slot name="panels"></slot>
   </div>
@@ -39,26 +37,19 @@ import { AnimatePresence, motion } from 'motion-v'
 
 export interface NeoTabGroupProps {
   selectedTabIndex: number
-  /**
-   * Animation configuration for the selection indicator
-   */
-  animate?: boolean
 }
 
 const props = withDefaults(defineProps<NeoTabGroupProps>(), {
   selectedTabIndex: 0,
-  animate: true,
 })
 
 defineEmits<{
   (e: 'update:selectedTabIndex', value: number): void
 }>()
 
-// Refs for DOM elements
 const tablistRef = ref<HTMLElement | null>(null)
 const tablistWidth = ref(0)
 
-// State for indicator
 const indicatorLeft = ref(0)
 const indicatorWidth = ref(0)
 const indicatorVisible = ref(false)
@@ -80,14 +71,12 @@ const updateIndicator = () => {
     return
   }
 
-  // Get the currently selected tab element
   const selectedTab = tabs[props.selectedTabIndex] as HTMLElement
   if (!selectedTab) {
     indicatorVisible.value = false
     return
   }
 
-  // Calculate position and dimensions
   const tabRect = selectedTab.getBoundingClientRect()
 
   indicatorLeft.value = selectedTab.offsetLeft
@@ -98,7 +87,6 @@ const updateIndicator = () => {
   indicatorAtEnd.value = props.selectedTabIndex === tabs.length - 1
 }
 
-// Watch for changes to the selected tab index
 watch(
   () => props.selectedTabIndex,
   () => {
@@ -107,12 +95,10 @@ watch(
   { immediate: true },
 )
 
-// Update indicator when component mounts
 onMounted(() => {
   updateIndicator()
 })
 
-// Update indicator when DOM updates (e.g., when tab contents change size)
 onUpdated(() => {
   updateIndicator()
 })

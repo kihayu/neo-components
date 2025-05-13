@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import NeoTab from './NeoTab.vue'
 import NeoIcon from '../NeoIcon/NeoIcon.vue'
 
-// Import Lucide icons
 import { Plus } from 'lucide-vue-next'
 
 const meta: Meta<typeof NeoTab> = {
@@ -92,17 +91,17 @@ export const TabGroup: Story = {
     components: { NeoTab },
     setup() {
       const selectedTabIndex = ref(0)
-      
+
       const selectTab = (index: number) => {
         selectedTabIndex.value = index
       }
-      
+
       return { args, selectedTabIndex, selectTab }
     },
     template: `
       <div>
         <div role="tablist" class="flex border-b-4 border-black">
-          <NeoTab 
+          <NeoTab
             id="tab-1"
             contentId="panel-1"
             :selected="selectedTabIndex === 0"
@@ -110,8 +109,8 @@ export const TabGroup: Story = {
           >
             First Tab
           </NeoTab>
-          
-          <NeoTab 
+
+          <NeoTab
             id="tab-2"
             contentId="panel-2"
             :selected="selectedTabIndex === 1"
@@ -119,8 +118,8 @@ export const TabGroup: Story = {
           >
             Second Tab
           </NeoTab>
-          
-          <NeoTab 
+
+          <NeoTab
             id="tab-3"
             contentId="panel-3"
             :selected="selectedTabIndex === 2"
@@ -128,8 +127,8 @@ export const TabGroup: Story = {
           >
             Third Tab
           </NeoTab>
-          
-          <NeoTab 
+
+          <NeoTab
             id="tab-4"
             contentId="panel-4"
             disabled
@@ -139,16 +138,16 @@ export const TabGroup: Story = {
             Disabled Tab
           </NeoTab>
         </div>
-        
+
         <div class="p-4 border-4 border-t-0 border-black rounded-b-xl">
           <div id="panel-1" role="tabpanel" aria-labelledby="tab-1" v-if="selectedTabIndex === 0">
             <p>Content for the first tab</p>
           </div>
-          
+
           <div id="panel-2" role="tabpanel" aria-labelledby="tab-2" v-if="selectedTabIndex === 1">
             <p>Content for the second tab</p>
           </div>
-          
+
           <div id="panel-3" role="tabpanel" aria-labelledby="tab-3" v-if="selectedTabIndex === 2">
             <p>Content for the third tab</p>
           </div>

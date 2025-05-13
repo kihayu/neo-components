@@ -36,12 +36,11 @@ export const Default: Story = {
     components: { NeoToggle },
     setup() {
       const isToggled = ref(args.modelValue);
-      
-      // Watch for changes from Storybook controls
+
       watch(() => args.modelValue, (newValue) => {
         isToggled.value = newValue;
       });
-      
+
       return { args, isToggled }
     },
     template: `

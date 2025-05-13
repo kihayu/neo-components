@@ -99,7 +99,6 @@ const updatePosition = () => {
   const triggerRect = triggerRef.value.getBoundingClientRect()
   const tooltipRect = tooltipRef.value.getBoundingClientRect()
 
-  // Window dimensions
   const windowWidth = window.innerWidth
   const windowHeight = window.innerHeight
 
@@ -108,7 +107,6 @@ const updatePosition = () => {
   let top = 0
   let left = 0
 
-  // Positioning based on the desired position
   switch (props.position) {
     case 'top':
       top = triggerRect.top - tooltipRect.height - gap
@@ -126,35 +124,30 @@ const updatePosition = () => {
       top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2
       left = triggerRect.left - tooltipRect.width - gap * 1.5
       break
-    default: // Fallback to top if position is invalid
+    default:
       top = triggerRect.top - tooltipRect.height - gap
       left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2
       break
   }
 
-  // Ensure tooltip stays within viewport boundaries
   const padding = 10
 
-  // Horizontal constraints
   if (left < padding) {
     left = padding
   } else if (left + tooltipRect.width > windowWidth - padding) {
     left = windowWidth - tooltipRect.width - padding
   }
 
-  // Vertical constraints
   if (top < padding) {
     top = padding
   } else if (top + tooltipRect.height > windowHeight - padding) {
     top = windowHeight - tooltipRect.height - padding
   }
 
-  // Set the positions
   tooltipTop.value = top
   tooltipLeft.value = left
 }
 
-// Event listeners for window resize
 const handleResize = () => {
   if (isVisible.value) {
     updatePosition()
@@ -164,14 +157,12 @@ const handleResize = () => {
 const setupResizeObserver = () => {
   if (!tooltipRef.value) return
 
-  // Use ResizeObserver to detect changes to the tooltip size
   const resizeObserver = new ResizeObserver(() => {
     if (isVisible.value) updatePosition()
   })
 
   resizeObserver.observe(tooltipRef.value)
 
-  // Clean up on unmount
   onBeforeUnmount(() => {
     resizeObserver.disconnect()
   })
@@ -181,12 +172,10 @@ onMounted(() => {
   window.addEventListener('resize', handleResize)
   window.addEventListener('scroll', handleResize, true)
 
-  // Add mutation observer to detect when content changes
   const observer = new MutationObserver(() => {
     if (isVisible.value) updatePosition()
   })
 
-  // Start observing when tooltip becomes visible
   const stopWatcher = watch(isVisible, (newValue: boolean) => {
     if (newValue && tooltipRef.value) {
       observer.observe(tooltipRef.value, {
@@ -196,14 +185,13 @@ onMounted(() => {
         attributes: true,
       })
       setupResizeObserver()
-      // Run position update again after a short delay to ensure all content is rendered
+
       setTimeout(updatePosition, 50)
     } else {
       observer.disconnect()
     }
   })
 
-  // Clean up on unmount
   onBeforeUnmount(() => {
     observer.disconnect()
     stopWatcher()
