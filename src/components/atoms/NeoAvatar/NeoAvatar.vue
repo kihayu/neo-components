@@ -118,37 +118,17 @@ const hoverAttributes = computed(() => {
     return {}
   }
 
-  let x = 0
-  let y = 0
-
-  switch (props.size) {
-    case 'xs':
-      x = 2
-      y = 3
-      break
-    case 'sm':
-      x = 3
-      y = 4
-      break
-    case 'md':
-      x = 4
-      y = 4
-      break
-    case 'lg':
-      x = 5
-      y = 6
-      break
-    case 'xl':
-      x = 6
-      y = 8
-      break
-    default:
-      break
+  const sizes = {
+    xs: { x: 2, y: 3 },
+    sm: { x: 3, y: 4 },
+    md: { x: 4, y: 4 },
+    lg: { x: 5, y: 6 },
+    xl: { x: 6, y: 8 },
   }
 
   return {
-    x: -x,
-    y: -y,
+    x: -sizes[props.size].x,
+    y: -sizes[props.size].y,
   }
 })
 </script>

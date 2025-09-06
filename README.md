@@ -88,3 +88,20 @@ Start the development server:
 ```
 
 See the [LICENSE](LICENSE) file for full details.
+
+## ▣▣▣ ACCESSIBILITY ▣▣▣
+
+This project includes a structured accessibility knowledge base aligned to WCAG 2.1 Level AA.
+
+- Central framework: [WCAG_Assessment_Framework.md](accessibility/WCAG_Assessment_Framework.md)
+- Structure:
+  - [checklists/](accessibility/checklists/)
+  - [audit-templates/](accessibility/audit-templates/)
+  - [mappings/](accessibility/mappings/)
+    - [Components_to_WCAG.md](accessibility/mappings/Components_to_WCAG.md)
+  - [references/](accessibility/references/)
+  - [inventory/](accessibility/inventory/)
+    - [Component_Inventory.md](accessibility/inventory/Component_Inventory.md) (if present)
+    - [Component_Categories.csv](accessibility/inventory/Component_Categories.csv) (if present)
+
+Refer to the framework for scope, workflow, and governance details.
