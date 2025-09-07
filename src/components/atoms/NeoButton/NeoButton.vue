@@ -2,26 +2,24 @@
   <div class="relative w-fit">
     <motion.button
       :initial="{
-        x: extendedShadow && !disabled ? -4 : 0,
-        y: extendedShadow && !disabled ? -6 : 0,
+        x: extendedShadow && !disabled ? -distanceToExpand : 0,
+        y: extendedShadow && !disabled ? -distanceToExpand : 0,
       }"
       :while-hover="{
-        x: disabled ? 0 : extendOnHover ? -4 : 0,
-        y: disabled ? 0 : extendOnHover ? -6 : 0,
+        x: disabled ? 0 : extendOnHover ? -distanceToExpand : 0,
+        y: disabled ? 0 : extendOnHover ? -distanceToExpand : 0,
       }"
       :while-press="{
         x: 0,
         y: 0,
       }"
       :while-focus="{
-        x: extendedShadow ? 0 : -4,
-        y: extendedShadow ? 0 : -6,
+        x: extendedShadow ? 0 : extendOnHover ? -distanceToExpand : 0,
+        y: extendedShadow ? 0 : extendOnHover ? -distanceToExpand : 0,
       }"
       :disabled="disabled"
-      class="font-primary relative z-10 transform rounded-xl border-4 border-black text-white inset-shadow-black transition-colors duration-100 hover:cursor-pointer active:inset-shadow-sm disabled:translate-0 disabled:opacity-65 disabled:hover:cursor-not-allowed disabled:active:inset-shadow-none"
       aria-label="Button"
-      :class="buttonClasses"
-      @click="onClick"
+      :class="buttonClasses({ size, type })"
     >
       <slot />
     </motion.button>
@@ -33,10 +31,11 @@
 </template>
 
 <script setup lang="ts">
+import { cva } from 'class-variance-authority'
 import { motion } from 'motion-v'
 import { computed } from 'vue'
 
-type ButtonSize = 'medium' | 'large'
+type ButtonSize = 'sm' | 'md' | 'lg'
 type ButtonType = 'primary' | 'error' | 'success' | 'warning'
 
 export interface NeoButtonProps {
@@ -47,43 +46,47 @@ export interface NeoButtonProps {
   extendOnHover?: boolean
 }
 
-const props = withDefaults(defineProps<NeoButtonProps>(), {
-  size: 'medium',
-  type: 'primary',
-  disabled: false,
-  extendedShadow: false,
-  extendOnHover: true,
-})
+const {
+  size = 'md',
+  type = 'primary',
+  disabled = false,
+  extendedShadow = false,
+  extendOnHover = true,
+} = defineProps<NeoButtonProps>()
 
-const buttonClasses = computed(() => {
-  const buttonClass = []
-  if (props.size === 'medium') {
-    buttonClass.push('px-4 py-2 text-lg')
-  } else if (props.size === 'large') {
-    buttonClass.push('px-6 py-3 text-xl')
+const buttonClasses = cva(
+  'font-primary relative z-10 transform rounded-xl border-4 border-black text-white inset-shadow-black transition-colors duration-100 hover:cursor-pointer active:inset-shadow-sm disabled:translate-0 disabled:opacity-65 disabled:hover:cursor-not-allowed disabled:active:inset-shadow-none',
+  {
+    variants: {
+      size: {
+        sm: 'px-2 py-1 text-sm',
+        md: 'px-4 py-2 text-lg',
+        lg: 'px-6 py-3 text-xl',
+      },
+      type: {
+        primary:
+          'bg-primary hover:bg-primary-dark focus:bg-primary-dark focus:outline-primary focus-visible:outline-primary disabled:hover:bg-primary!',
+        error:
+          'bg-error hover:bg-error-dark focus:bg-error-dark focus:outline-error focus-visible:outline-error disabled:hover:bg-error!',
+        success:
+          'bg-success hover:bg-success-dark focus:bg-success-dark focus:outline-success focus-visible:outline-success disabled:hover:bg-success!',
+        warning:
+          'bg-warning hover:bg-warning-dark focus:bg-warning-dark focus:outline-warning focus-visible:outline-warning disabled:hover:bg-warning!',
+      },
+    },
+  },
+)
+
+const distanceToExpand = computed(() => {
+  switch (size) {
+    case 'sm':
+      return 4
+    case 'md':
+      return 6
+    case 'lg':
+      return 8
+    default:
+      return 6
   }
-
-  const buttonTypeClasses = {
-    primary:
-      'bg-primary hover:bg-primary-dark focus:bg-primary-dark focus:outline-primary focus-visible:outline-primary disabled:hover:bg-primary!',
-    error:
-      'bg-error hover:bg-error-dark focus:bg-error-dark focus:outline-error focus-visible:outline-error disabled:hover:bg-error!',
-    success:
-      'bg-success hover:bg-success-dark focus:bg-success-dark focus:outline-success focus-visible:outline-success disabled:hover:bg-success!',
-    warning:
-      'bg-warning hover:bg-warning-dark focus:bg-warning-dark focus:outline-warning focus-visible:outline-warning disabled:hover:bg-warning!',
-  }
-
-  buttonClass.push(buttonTypeClasses[props.type])
-  return buttonClass.join(' ')
 })
-
-interface BasicButtonEmits {
-  (e: 'click', value: unknown): void
-}
-
-const emit = defineEmits<BasicButtonEmits>()
-const onClick = () => {
-  emit('click', 'onClick')
-}
 </script>

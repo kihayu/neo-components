@@ -17,7 +17,7 @@
         :model-value="modelValue"
         :value="option.value"
         :disabled="disabled || option.disabled"
-        @update:model-value="(value: unknown) => updateValue(value)"
+        @update:model-value="(value: string | number | boolean) => updateValue(value)"
       >
         {{ option.label }}
       </NeoRadio>

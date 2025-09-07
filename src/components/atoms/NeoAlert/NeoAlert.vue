@@ -38,14 +38,9 @@
         </div>
       </div>
       <div v-if="dismissible" class="flex-shrink-0">
-        <button
-          type="button"
-          class="flex rounded-md p-1.5 hover:bg-black/10 focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          @click="dismiss"
-          aria-label="Dismiss"
-        >
+        <NeoButton @click="dismiss" aria-label="Dismiss">
           <X class="h-5 w-5" />
-        </button>
+        </NeoButton>
       </div>
     </motion.div>
   </div>

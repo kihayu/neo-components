@@ -43,14 +43,9 @@
           </div>
         </div>
 
-        <button
-          v-if="dismissible"
-          class="absolute top-2 right-2 z-20 rounded-full p-1 hover:cursor-pointer hover:bg-black/10 focus:outline-none focus-visible:ring-2"
-          @click="closePopover"
-          aria-label="Close popover"
-        >
+        <NeoButton v-if="dismissible" @click="closePopover" aria-label="Close popover">
           <X :size="16" aria-hidden="true" />
-        </button>
+        </NeoButton>
       </div>
     </transition>
   </Teleport>
