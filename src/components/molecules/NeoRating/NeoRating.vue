@@ -1,18 +1,18 @@
 <template>
   <div
     data-slot="neo-rating"
-    :class="cn('inline-flex items-center gap-1', props.class)"
+    :class="cn('inline-flex items-center gap-1')"
     role="radiogroup"
-    :aria-label="props.ariaLabel ?? 'Rating'"
+    :aria-label="ariaLabel ?? 'Rating'"
   >
     <button
-      v-for="i in max"
+      v-for="i in formatedMax"
       :key="i"
       type="button"
       role="radio"
       :aria-checked="ariaChecked(i)"
       :tabindex="tabIndexFor(i)"
-      :disabled="props.disabled || props.readonly"
+      :disabled="disabled || readonly"
       @click="onItemClick(i, $event)"
       @mousemove="onItemMouseMove(i, $event)"
       @mouseenter="onItemMouseEnter(i, $event)"
@@ -26,8 +26,8 @@
         cn(
           'group relative inline-flex items-center justify-center rounded-md border-4 border-black bg-white',
           'focus-visible:outline-primary focus-visible:outline-2',
-          props.size === 'sm' ? 'p-1' : props.size === 'lg' ? 'p-2' : 'p-1.5',
-          props.disabled || props.readonly ? 'cursor-default opacity-65' : 'cursor-pointer',
+          size === 'sm' ? 'p-1' : size === 'lg' ? 'p-2' : 'p-1.5',
+          disabled || readonly ? 'cursor-default opacity-65' : 'cursor-pointer',
         )
       "
     >
@@ -61,7 +61,7 @@ import type { HTMLAttributes } from 'vue'
 
 export type NeoSize = 'sm' | 'md' | 'lg'
 export interface NeoRatingProps {
-  modelValue: number
+  defaultValue?: number
   max?: number
   allowHalf?: boolean
   allowClear?: boolean
@@ -81,35 +81,32 @@ export interface NeoRatingEmits {
   (e: 'hoverChange', value: number | null): void
 }
 
-const props = withDefaults(defineProps<NeoRatingProps>(), {
-  modelValue: 0,
-  max: 5,
-  allowHalf: false,
-  allowClear: false,
-  disabled: false,
-  readonly: false,
-  getItemAriaLabel: (index: number, max: number) => `Rate ${index} of ${max}`,
-  ariaLabel: undefined,
-  role: undefined,
-  class: undefined,
-  size: 'md',
-  variant: 'default',
-})
+const {
+  defaultValue = 0,
+  max = 5,
+  allowHalf = false,
+  allowClear = false,
+  disabled = false,
+  readonly = false,
+  getItemAriaLabel = (index: number, max: number) => `Rate ${index} of ${max}`,
+  ariaLabel = undefined,
+} = defineProps<NeoRatingProps>()
 
-const model = defineModel<number>({ default: 0 })
+const model = defineModel<number>()
+if (model.value == null) {
+  model.value = defaultValue
+}
 const emit = defineEmits<NeoRatingEmits>()
 
-const max = computed(() => Math.max(1, props.max ?? 5))
+const formatedMax = computed(() => Math.max(1, max))
 const hoverValue = ref<number | null>(null)
 
-const displayValue = computed(() => {
-  return hoverValue.value ?? model?.value ?? 0
-})
+const displayValue = computed(() => hoverValue.value ?? model?.value ?? 0)
 
 function clampValue(v: number) {
-  const step = props.allowHalf ? 0.5 : 1
+  const step = allowHalf ? 0.5 : 1
   const rounded = Math.round(v / step) * step
-  return Math.max(0, Math.min(max.value, rounded))
+  return Math.max(0, Math.min(formatedMax.value, rounded))
 }
 
 function isFull(i: number) {
@@ -117,13 +114,16 @@ function isFull(i: number) {
 }
 
 function isHalf(i: number) {
-  if (!props.allowHalf) return false
+  if (!allowHalf) {
+    return false
+  }
+
   const floor = Math.floor(displayValue.value)
   return floor + 0.5 === displayValue.value && i === floor + 1
 }
 
 function itemAriaLabel(i: number) {
-  return props.getItemAriaLabel?.(i, max.value) ?? `Rate ${i} of ${max.value}`
+  return getItemAriaLabel?.(i, formatedMax.value) ?? `Rate ${i} of ${formatedMax.value}`
 }
 
 function ariaChecked(i: number) {
@@ -139,8 +139,10 @@ function tabIndexFor(i: number) {
 
 function setValue(v: number, from: 'click' | 'keyboard') {
   const next = clampValue(v)
-  if (props.allowClear && next === model.value && from === 'click') {
+  if (allowClear && next === model.value && from === 'click') {
     model.value = 0
+    // Clear hover so visual state reflects the cleared selection immediately
+    hoverValue.value = null
     emit('change', 0)
     return
   }
@@ -148,12 +150,19 @@ function setValue(v: number, from: 'click' | 'keyboard') {
     model.value = next
     emit('change', next)
   }
+  // After any selection via click/keyboard, reset hover override so stars reflect the model
+  if (from === 'click' || from === 'keyboard') {
+    hoverValue.value = null
+  }
 }
 
 function onItemClick(i: number, ev: MouseEvent) {
-  if (props.disabled || props.readonly) return
+  if (disabled || readonly) {
+    return
+  }
+
   let next = i
-  if (props.allowHalf) {
+  if (allowHalf) {
     const target = ev.currentTarget as HTMLElement
     const rect = target.getBoundingClientRect()
     const isLeftHalf = ev.clientX - rect.left < rect.width / 2
@@ -163,8 +172,14 @@ function onItemClick(i: number, ev: MouseEvent) {
 }
 
 function onItemMouseMove(i: number, ev: MouseEvent) {
-  if (!props.allowHalf) return
-  if (props.disabled || props.readonly) return
+  if (!allowHalf) {
+    return
+  }
+
+  if (disabled || readonly) {
+    return
+  }
+
   const target = ev.currentTarget as HTMLElement
   const rect = target.getBoundingClientRect()
   const isLeftHalf = ev.clientX - rect.left < rect.width / 2
@@ -173,8 +188,11 @@ function onItemMouseMove(i: number, ev: MouseEvent) {
 }
 
 function onItemMouseEnter(i: number, ev: MouseEvent) {
-  if (props.disabled || props.readonly) return
-  if (!props.allowHalf) {
+  if (disabled || readonly) {
+    return
+  }
+
+  if (!allowHalf) {
     hoverValue.value = i
     emit('hoverChange', hoverValue.value)
     return
@@ -183,7 +201,10 @@ function onItemMouseEnter(i: number, ev: MouseEvent) {
 }
 
 function onItemMouseLeave() {
-  if (props.disabled || props.readonly) return
+  if (disabled || readonly) {
+    return
+  }
+
   hoverValue.value = null
   emit('hoverChange', null)
 }
@@ -197,8 +218,11 @@ function onBlur() {
 }
 
 function onKeydown(e: KeyboardEvent, i: number) {
-  if (props.disabled || props.readonly) return
-  const step = props.allowHalf ? 0.5 : 1
+  if (disabled || readonly) {
+    return
+  }
+
+  const step = allowHalf ? 0.5 : 1
   const current = model.value ?? 0
   if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
     e.preventDefault()
@@ -211,7 +235,7 @@ function onKeydown(e: KeyboardEvent, i: number) {
     setValue(0, 'keyboard')
   } else if (e.key === 'End') {
     e.preventDefault()
-    setValue(max.value, 'keyboard')
+    setValue(formatedMax.value, 'keyboard')
   } else if (e.key === ' ' || e.key === 'Enter') {
     e.preventDefault()
     setValue(i, 'keyboard')

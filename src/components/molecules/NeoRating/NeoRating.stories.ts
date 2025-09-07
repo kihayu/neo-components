@@ -7,7 +7,7 @@ const meta: Meta<typeof NeoRating> = {
   component: NeoRating,
   tags: ['autodocs'],
   argTypes: {
-    modelValue: { control: 'number' },
+    defaultValue: { control: 'number' },
     max: { control: 'number' },
     allowHalf: { control: 'boolean' },
     allowClear: { control: 'boolean' },
@@ -20,8 +20,8 @@ const meta: Meta<typeof NeoRating> = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const defaultArgs: Partial<NeoRatingProps> & { modelValue: number } = {
-  modelValue: 3,
+const defaultArgs: Partial<NeoRatingProps> & { defaultValue: number } = {
+  defaultValue: 3,
   max: 5,
   allowHalf: false,
   allowClear: false,
@@ -37,7 +37,7 @@ export const Default: Story = {
   render: (args) => ({
     components: { NeoRating },
     setup() {
-      const value = ref(args.modelValue ?? 3)
+      const value = ref(args.defaultValue ?? 3)
       return { args, value }
     },
     template: `
@@ -50,11 +50,11 @@ export const Default: Story = {
 }
 
 export const AllowHalf: Story = {
-  args: { ...defaultArgs, allowHalf: true, modelValue: 2.5 },
+  args: { ...defaultArgs, allowHalf: true, defaultValue: 2.5 },
   render: (args) => ({
     components: { NeoRating },
     setup() {
-      const value = ref(args.modelValue ?? 2.5)
+      const value = ref(args.defaultValue ?? 2.5)
       return { args, value }
     },
     template: `
@@ -67,11 +67,11 @@ export const AllowHalf: Story = {
 }
 
 export const AllowClear: Story = {
-  args: { ...defaultArgs, allowClear: true, modelValue: 4 },
+  args: { ...defaultArgs, allowClear: true, defaultValue: 4 },
   render: (args) => ({
     components: { NeoRating },
     setup() {
-      const value = ref(args.modelValue ?? 4)
+      const value = ref(args.defaultValue ?? 4)
       return { args, value }
     },
     template: `
@@ -85,11 +85,11 @@ export const AllowClear: Story = {
 }
 
 export const Readonly: Story = {
-  args: { ...defaultArgs, readonly: true, modelValue: 4 },
+  args: { ...defaultArgs, readonly: true, defaultValue: 4 },
   render: (args) => ({
     components: { NeoRating },
     setup() {
-      const value = ref(args.modelValue ?? 4)
+      const value = ref(args.defaultValue ?? 4)
       return { args, value }
     },
     template: `
@@ -102,11 +102,11 @@ export const Readonly: Story = {
 }
 
 export const Disabled: Story = {
-  args: { ...defaultArgs, disabled: true, modelValue: 3 },
+  args: { ...defaultArgs, disabled: true, defaultValue: 3 },
   render: (args) => ({
     components: { NeoRating },
     setup() {
-      const value = ref(args.modelValue ?? 3)
+      const value = ref(args.defaultValue ?? 3)
       return { args, value }
     },
     template: `
@@ -119,7 +119,7 @@ export const Disabled: Story = {
 }
 
 export const Sizes: Story = {
-  args: { ...defaultArgs, modelValue: 3 },
+  args: { ...defaultArgs, defaultValue: 3 },
   render: (args) => ({
     components: { NeoRating },
     setup() {
@@ -148,11 +148,11 @@ export const Sizes: Story = {
 }
 
 export const KeyboardNavigation: Story = {
-  args: { ...defaultArgs, modelValue: 2, allowHalf: true },
+  args: { ...defaultArgs, defaultValue: 2, allowHalf: true },
   render: (args) => ({
     components: { NeoRating },
     setup() {
-      const value = ref(args.modelValue ?? 2)
+      const value = ref(args.defaultValue ?? 2)
       return { args, value }
     },
     template: `
