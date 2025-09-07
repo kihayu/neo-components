@@ -1,26 +1,26 @@
 <template>
-  <div class="w-full" :class="props.class">
+  <div class="w-full">
     <SliderRoot
       v-model="model"
-      :min="props.min"
-      :max="props.max"
-      :step="props.step"
-      :orientation="props.orientation"
-      :disabled="props.disabled"
-      :name="props.name"
+      :min="min"
+      :max="max"
+      :step="step"
+      :orientation="orientation"
+      :disabled="disabled"
+      :name="name"
       class="relative flex w-full items-center"
-      :class="props.orientation === 'vertical' ? 'h-44 flex-col' : 'h-10'"
+      :class="orientation === 'vertical' ? 'h-44 flex-col' : 'h-10'"
       @pointerup="onCommit"
       @touchend="onCommit"
       @keyup.enter.prevent="onCommit"
     >
       <SliderTrack
         class="relative grow overflow-hidden rounded-full border-4 border-black bg-white"
-        :class="props.orientation === 'vertical' ? trackV : trackH"
+        :class="orientation === 'vertical' ? trackV : trackH"
       >
         <SliderRange
           class="bg-primary absolute"
-          :class="props.orientation === 'vertical' ? rangeV : rangeH"
+          :class="orientation === 'vertical' ? 'w-full' : 'h-full'"
         />
       </SliderTrack>
       <SliderThumb
@@ -34,35 +34,30 @@
       />
     </SliderRoot>
 
-    <div v-if="props.showValueLabel" class="text-utility-darker mt-2 text-xs font-medium">
-      {{ model.join(' – ') }}
+    <div v-if="showValueLabel" class="text-utility-darker mt-2 text-xs font-medium">
+      {{ model?.join(' - ') }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
-import type { HTMLAttributes } from 'vue'
 import { SliderRoot, SliderTrack, SliderRange, SliderThumb } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import type { SliderVariants } from '.'
 
 export type NeoOrientation = 'horizontal' | 'vertical'
+
 export interface NeoSliderProps {
-  modelValue: number[]
+  defaultValue?: number[]
   min?: number
   max?: number
   step?: number
   orientation?: NeoOrientation
-  minStepsBetweenThumbs?: number
   name?: string
   disabled?: boolean
   showValueLabel?: boolean
   ariaLabel?: string
-  ariaLabelledby?: string
-  ariaDescribedby?: string
-  role?: string
-  class?: HTMLAttributes['class']
   size?: SliderVariants['size']
 }
 
@@ -72,25 +67,24 @@ export interface NeoSliderEmits {
   (e: 'commit', value: number[], ev: Event): void
 }
 
-const props = withDefaults(defineProps<NeoSliderProps>(), {
-  modelValue: () => [50],
-  min: 0,
-  max: 100,
-  step: 1,
-  orientation: 'horizontal',
-  minStepsBetweenThumbs: 0,
-  name: undefined,
-  disabled: false,
-  showValueLabel: false,
-  ariaLabel: undefined,
-  ariaLabelledby: undefined,
-  ariaDescribedby: undefined,
-  role: undefined,
-  class: undefined,
-  size: 'md',
-})
+const {
+  defaultValue = [50],
+  min = 0,
+  max = 100,
+  step = 1,
+  orientation = 'horizontal',
+  name = undefined,
+  disabled = false,
+  showValueLabel = false,
+  ariaLabel = undefined,
+  size = 'md',
+} = defineProps<NeoSliderProps>()
 
-const model = defineModel<number[]>({ default: [50] })
+const model = defineModel<number[]>()
+// Ensure model has an initial value when not provided by parent
+if (model.value == null) {
+  model.value = defaultValue
+}
 
 const emit = defineEmits<NeoSliderEmits>()
 
@@ -116,23 +110,23 @@ function onCommit() {
   }
 }
 
+// model is initialized above to avoid undefined during initial render
+
 function thumbAriaLabel(i: number) {
-  if (props.ariaLabel) return `${props.ariaLabel} thumb ${i + 1}`
+  if (ariaLabel) return `${ariaLabel} thumb ${i + 1}`
   return `Slider thumb ${i + 1}`
 }
 
-const trackH = computed(() => cn(props.size === 'sm' ? 'h-3' : props.size === 'lg' ? 'h-5' : 'h-4'))
+const trackH = computed(() => cn(size === 'sm' ? 'h-3' : size === 'lg' ? 'h-5' : 'h-4'))
 const trackV = computed(() =>
-  cn(props.size === 'sm' ? 'w-3 h-full' : props.size === 'lg' ? 'w-5 h-full' : 'w-4 h-full'),
+  cn(size === 'sm' ? 'w-3 h-full' : size === 'lg' ? 'w-5 h-full' : 'w-4 h-full'),
 )
-const rangeH = computed(() => 'h-full')
-const rangeV = computed(() => 'w-full')
 const thumbSize = computed(() => {
   const map: Record<NonNullable<SliderVariants['size']>, string> = {
     sm: 'h-5 w-5',
     md: 'h-6 w-6',
     lg: 'h-8 w-8',
   }
-  return map[(props.size as NonNullable<SliderVariants['size']>) ?? 'md']
+  return map[(size as NonNullable<SliderVariants['size']>) ?? 'md']
 })
 </script>

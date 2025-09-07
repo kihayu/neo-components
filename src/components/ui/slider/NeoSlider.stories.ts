@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { ref } from 'vue'
-import { NeoSlider } from '.'
+import NeoSlider from '@/components/ui/slider/NeoSlider.vue'
 
 const meta = {
   title: 'UI/NeoSlider',
@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    modelValue: [50],
+    defaultValue: [50],
     min: 0,
     max: 100,
     step: 1,
@@ -47,7 +47,7 @@ export const Default: Story = {
 
 export const Range: Story = {
   args: {
-    modelValue: [25, 75],
+    defaultValue: [25, 75],
     min: 0,
     max: 100,
     step: 1,
@@ -64,7 +64,7 @@ export const Range: Story = {
     template: `
       <div class="max-w-xl">
         <NeoSlider v-model="value" v-bind="args" />
-        <div class="mt-2 text-sm">Range: {{ value.join(' – ') }}</div>
+        <div class="mt-2 text-sm">Range: {{ value.join(' - ') }}</div>
       </div>
     `,
   }),
@@ -72,7 +72,7 @@ export const Range: Story = {
 
 export const Vertical: Story = {
   args: {
-    modelValue: [40],
+    defaultValue: [40],
     min: 0,
     max: 100,
     step: 1,

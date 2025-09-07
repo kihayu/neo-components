@@ -11,6 +11,7 @@
         cn(
           'fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2',
           dialogContentVariants({ size: props.size }),
+          contentWidth,
           props.class,
         )
       "
@@ -21,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
+import { computed, type HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import {
   DialogPortal,
@@ -38,4 +39,19 @@ const props = defineProps<
 >()
 const delegated = reactiveOmit(props, 'class', 'size')
 const forwarded = useForwardProps(delegated)
+
+const contentWidth = computed(() => {
+  switch (props.size) {
+    case 'sm':
+      return 'w-[20rem]'
+    case 'md':
+      return 'w-[28rem]'
+    case 'lg':
+      return 'w-[36rem]'
+    case 'xl':
+      return 'w-[44rem]'
+    default:
+      return 'w-[28rem]'
+  }
+})
 </script>
