@@ -39,15 +39,15 @@ export interface NeoProgressBarProps {
   ariaLabel?: string
 }
 
-const props = withDefaults(defineProps<NeoProgressBarProps>(), {
-  id: 'neo-progress',
-  value: 0,
-  label: 'Progress',
-  color: 'primary',
-  showLabels: true,
-  showValue: true,
-  ariaLabel: '',
-})
+const {
+  id = 'neo-progress',
+  value = 0,
+  label = 'Progress',
+  color = 'primary',
+  showLabels = true,
+  showValue = true,
+  ariaLabel = '',
+} = defineProps<NeoProgressBarProps>()
 
 const colorClass = computed(() => {
   const colors = {
@@ -58,6 +58,6 @@ const colorClass = computed(() => {
     info: 'bg-primary-light',
   }
 
-  return colors[props.color]
+  return colors[color]
 })
 </script>

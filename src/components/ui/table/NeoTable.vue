@@ -1,33 +1,29 @@
 <template>
-  <div :class="props.class">
-    <!-- Caption / Title -->
+  <div>
     <div v-if="$slots.caption" class="mb-2">
       <slot name="caption" />
     </div>
 
-    <!-- Toolbar -->
     <div v-if="$slots.toolbar" class="mb-2">
       <slot name="toolbar" />
     </div>
 
-    <!-- Table -->
     <div class="w-full overflow-x-auto">
       <table
-        :role="props.role ?? 'table'"
-        :aria-label="props.ariaLabel"
-        :aria-describedby="props.ariaDescribedby"
-        :aria-labelledby="props.ariaLabelledby"
-        :class="[tableClassComputed, props.tableClass]"
+        :role="role ?? 'table'"
+        :aria-label="ariaLabel"
+        :aria-describedby="ariaDescribedby"
+        :aria-labelledby="ariaLabelledby"
+        :class="[tableClassComputed, tableClass]"
       >
-        <thead v-if="props.showHeader !== false">
-          <tr :class="props.headerRowClass">
+        <thead v-if="showHeader !== false">
+          <tr :class="headerRowClass">
             <template v-for="(col, ci) in columnsNormalized" :key="col.key">
               <th
                 scope="col"
                 :class="['bg-white text-left align-bottom', headerCellClass(col)]"
                 :aria-sort="ariaSortFor(col)"
               >
-                <!-- Custom header cell -->
                 <slot
                   v-if="$slots.headerCell"
                   name="headerCell"
@@ -36,7 +32,7 @@
                   :sorted="isSorted(col)"
                   :sortDirection="currentSortDirection"
                 />
-                <!-- Built-in header with clickable sort -->
+
                 <button
                   v-else
                   type="button"
@@ -87,21 +83,21 @@
           </tr>
         </thead>
 
-        <tbody :class="props.bodyClass">
+        <tbody :class="bodyClass">
           <!-- Empty and not loading -->
-          <tr v-if="!rowsSorted.length && !props.loading">
+          <tr v-if="!rowsSorted.length && !loading">
             <td
               :colspan="columnsNormalized.length"
               class="px-3 py-2 text-center text-sm text-black/70"
             >
               <slot name="empty">
-                {{ props.emptyText ?? 'No data available' }}
+                {{ emptyText ?? 'No data available' }}
               </slot>
             </td>
           </tr>
 
           <!-- Loading -->
-          <tr v-else-if="props.loading">
+          <tr v-else-if="loading">
             <td :colspan="columnsNormalized.length" class="px-3 py-3 text-center">
               <slot name="loading">
                 <span class="text-sm text-black/70">Loading…</span>
@@ -115,7 +111,7 @@
               v-for="(row, ri) in rowsSorted"
               :key="rowKey(row, ri)"
               :class="rowClassComputed(row, ri)"
-              :aria-label="props.rowMeta ? props.rowMeta(row, ri)?.ariaLabel : undefined"
+              :aria-label="rowMeta ? rowMeta(row, ri)?.ariaLabel : undefined"
               :data-selected="isRowSelected(row, ri) || undefined"
               @click="onRowClick(row, ri, $event)"
               @dblclick="onRowDblclick(row, ri, $event)"
@@ -159,13 +155,7 @@
 
     <!-- Pagination area -->
     <div v-if="$slots.pagination" class="mt-2">
-      <slot
-        name="pagination"
-        :page="props.page"
-        :perPage="props.perPage"
-        :total="props.total"
-        :setPage="setPage"
-      />
+      <slot name="pagination" :page="page" :perPage="perPage" :total="total" :setPage="setPage" />
     </div>
   </div>
 </template>
@@ -230,7 +220,6 @@ export interface NeoTableProps<TData = Record<string, unknown>> {
   ariaDescribedby?: string
   ariaLabelledby?: string
   role?: 'table'
-  class?: HTMLAttributes['class']
   tableClass?: HTMLAttributes['class']
   headerRowClass?: HTMLAttributes['class']
   bodyClass?: HTMLAttributes['class']
@@ -252,65 +241,59 @@ export interface NeoTableEmits<TData = Record<string, unknown>> {
 
 type Row = Record<string, unknown>
 
-const props = withDefaults(defineProps<NeoTableProps<Row>>(), {
-  data: () => [] as Row[],
-  columns: () => [] as Array<TableColumn<Row>>,
-  keyField: undefined,
-  page: undefined,
-  perPage: undefined,
-  total: undefined,
-  sortKey: undefined,
-  sortDirection: undefined,
-  selectable: false,
-  selectionMode: 'multiple',
-  selectedKeys: undefined,
-  showHeader: true,
-  stickyHeader: false,
-  dense: false,
-  bordered: true,
-  striped: false,
-  loading: false,
-  emptyText: 'No data available',
-  ariaLabel: undefined,
-  ariaDescribedby: undefined,
-  ariaLabelledby: undefined,
-  role: 'table',
-  class: undefined,
-  tableClass: undefined,
-  headerRowClass: undefined,
-  bodyClass: undefined,
-})
-
+const {
+  data: rowsData,
+  columns: columnDefs,
+  keyField,
+  page,
+  perPage,
+  total,
+  sortKey,
+  sortDirection,
+  selectable,
+  selectionMode,
+  selectedKeys,
+  showHeader,
+  stickyHeader,
+  dense,
+  bordered,
+  striped,
+  loading,
+  emptyText,
+  rowMeta,
+  rowClass,
+  cellClass,
+  ariaLabel,
+  ariaDescribedby,
+  ariaLabelledby,
+  role,
+  tableClass,
+  headerRowClass,
+  bodyClass,
+} = defineProps<NeoTableProps<Row>>()
 const emit = defineEmits<NeoTableEmits<Row>>()
 
-/**
- * Column normalization for defaults
- */
-const columnsNormalized = computed(() => {
-  return (props.columns ?? []).map((c) => ({
+const columnsNormalized = computed<Array<TableColumn<Row>>>(() => {
+  const cols = (columnDefs ?? []) as Array<TableColumn<Row>>
+  return cols.map((c: TableColumn<Row>) => ({
     ...c,
     sortable: !!c.sortable,
-  })) as Array<TableColumn<Row>>
+  }))
 })
 
-/**
- * Sorting (controlled/uncontrolled)
- */
 const internalSortKey = ref<string | ((a: Row, b: Row) => number) | undefined>(
-  props.sortKey as string | ((a: Row, b: Row) => number) | undefined,
+  sortKey as string | ((a: Row, b: Row) => number) | undefined,
 )
-const internalSortDirection = ref<Exclude<TableSortDirection, null> | undefined>(
-  props.sortDirection,
-)
+const internalSortDirection = ref<Exclude<TableSortDirection, null> | undefined>(sortDirection)
 
 watch(
-  () => props.sortKey,
+  () => sortKey,
   (v) => {
     internalSortKey.value = v as string | ((a: Row, b: Row) => number) | undefined
   },
 )
 watch(
-  () => props.sortDirection,
+  () => sortDirection,
   (v) => {
     internalSortDirection.value = v
   },
@@ -324,7 +307,7 @@ const currentSortDirection = computed<Exclude<TableSortDirection, null> | undefi
 function isSorted(col: TableColumn<Row>) {
   const ck = currentSortKey.value
   if (!ck) return false
-  if (typeof ck === 'function') return true // custom sorter applied (assume header indicates active)
+  if (typeof ck === 'function') return true
   const keyForCol = col.sortKey ?? col.key
   return ck === keyForCol
 }
@@ -344,7 +327,6 @@ function onHeaderClick(col: TableColumn<Row>, ev: MouseEvent) {
 
   let nextKey: NonNullable<typeof internalSortKey.value>
   if (typeof currentSortKey.value === 'function') {
-    // keep custom sorter active unless switching to another column
     nextKey = (col.sortKey ?? col.key) as NonNullable<typeof internalSortKey.value>
   } else {
     const keyForCol = col.sortKey ?? col.key
@@ -362,11 +344,8 @@ function onHeaderClick(col: TableColumn<Row>, ev: MouseEvent) {
   emit('update:sortDirection', nextDir)
 }
 
-/**
- * Row keys
- */
 function rowKey(row: Row, index: number) {
-  const kf = props.keyField
+  const kf = keyField
   if (typeof kf === 'function') return (kf as (row: Row) => string | number)(row)
   if (typeof kf === 'string') {
     const key = row[kf as keyof Row]
@@ -375,22 +354,17 @@ function rowKey(row: Row, index: number) {
   return index
 }
 
-/**
- * Sorting application (client-side)
- */
 const rowsSorted = computed<Row[]>(() => {
-  const data = (props.data ?? []) as Row[]
+  const dataArr = (rowsData ?? []) as Row[]
   const ck = currentSortKey.value
   const dir = currentSortDirection.value
-  if (!ck || !dir) return data
+  if (!ck || !dir) return dataArr
 
-  // function sorter
   if (typeof ck === 'function') {
-    const sorted = [...data].sort(ck)
+    const sorted = [...dataArr].sort(ck)
     return dir === 'asc' ? sorted : sorted.reverse()
   }
 
-  // string sortKey: derive comparator using matching column
   const col = columnsNormalized.value.find((c) => (c.sortKey ?? c.key) === ck)
   const getVal = (row: Row): unknown => {
     if (col?.accessor) return col.accessor(row as Row)
@@ -398,7 +372,7 @@ const rowsSorted = computed<Row[]>(() => {
       return (row[ck as keyof Row] ?? row[col?.key as keyof Row]) as unknown
     return row[col?.key as keyof Row] as unknown
   }
-  const sorted = [...data].sort((a, b) => {
+  const sorted = [...dataArr].sort((a, b) => {
     const va = getVal(a)
     const vb = getVal(b)
     if (va == null && vb == null) return 0
@@ -410,21 +384,15 @@ const rowsSorted = computed<Row[]>(() => {
   return dir === 'asc' ? sorted : sorted.reverse()
 })
 
-/**
- * Table variants
- */
 const tableClassComputed = computed(() =>
   tableVariants({
-    dense: (props.dense as NonNullable<TableVariants['dense']>) ?? false,
-    bordered: (props.bordered as NonNullable<TableVariants['bordered']>) ?? true,
-    striped: (props.striped as NonNullable<TableVariants['striped']>) ?? false,
-    stickyHeader: (props.stickyHeader as NonNullable<TableVariants['stickyHeader']>) ?? false,
+    dense: (dense as NonNullable<TableVariants['dense']>) ?? false,
+    bordered: (bordered as NonNullable<TableVariants['bordered']>) ?? true,
+    striped: (striped as NonNullable<TableVariants['striped']>) ?? false,
+    stickyHeader: (stickyHeader as NonNullable<TableVariants['stickyHeader']>) ?? false,
   }),
 )
 
-/**
- * Cell value helpers
- */
 function cellValue(row: Row, col: TableColumn<Row>): unknown {
   return col.accessor ? col.accessor(row as Row) : (row[col.key as keyof Row] as unknown)
 }
@@ -433,31 +401,25 @@ function displayCell(row: Row, col: TableColumn<Row>) {
   return v == null ? '' : (v as unknown as string | number | boolean)
 }
 
-/**
- * Header/cell classes
- */
 function headerCellClass(col: TableColumn<Row>) {
   return [col.headerClass, 'px-2 py-2 font-extrabold'].filter(Boolean)
 }
 function cellClassComputed(row: Row, col: TableColumn<Row>, ri: number, ci: number) {
   const align =
     col.align === 'end' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'
-  const extra = props.cellClass?.(row, col, ri, ci) ?? col.cellClass ?? align
+  const extra = cellClass?.(row, col, ri, ci) ?? col.cellClass ?? align
   return [
     'px-2 py-1.5 align-top focus-visible:outline-2 focus-visible:outline-primary',
     extra,
   ].filter(Boolean)
 }
 function rowClassComputed(row: Row, ri: number) {
-  return props.rowClass?.(row, ri) ?? props.rowMeta?.(row, ri)?.class
+  return rowClass?.(row, ri) ?? rowMeta?.(row, ri)?.class
 }
 
-/**
- * Selection handling (uncontrolled)
- */
-const internalSelected = ref<Set<string | number>>(new Set(props.selectedKeys ?? []))
+const internalSelected = ref<Set<string | number>>(new Set(selectedKeys ?? []))
 watch(
-  () => props.selectedKeys,
+  () => selectedKeys,
   (ks) => {
     if (ks) internalSelected.value = new Set(ks)
   },
@@ -472,10 +434,10 @@ function setSelectedKeys(next: Array<string | number>) {
   emit('selectionChange', next)
 }
 function toggleRowSelection(row: Row, ri: number) {
-  if (!props.selectable) return
+  if (!selectable) return
   const key = rowKey(row, ri)
   const next = new Set(internalSelected.value)
-  if (props.selectionMode === 'single') {
+  if (selectionMode === 'single') {
     if (next.has(key)) next.clear()
     else {
       next.clear()
@@ -488,9 +450,6 @@ function toggleRowSelection(row: Row, ri: number) {
   setSelectedKeys(Array.from(next))
 }
 
-/**
- * Row interactions
- */
 function onRowClick(row: Row, ri: number, ev: MouseEvent) {
   toggleRowSelection(row, ri)
   emit('rowClick', { row, index: ri, ev })
@@ -502,9 +461,6 @@ function onRowContextmenu(row: Row, ri: number, ev: MouseEvent) {
   emit('rowContextmenu', { row, index: ri, ev })
 }
 
-/**
- * Keyboard navigation across cells (roving focus)
- */
 const focused = reactive({ r: 0, c: 0 })
 const cellRefs = ref<Array<Array<HTMLTableCellElement | null>>>([])
 
@@ -570,16 +526,12 @@ function onCellKeydown(ri: number, ci: number, ev: KeyboardEvent) {
       break
     case 'Enter':
     case ' ':
-      // toggle selection on row
       ev.preventDefault()
       toggleRowSelection(rowsSorted.value[ri], ri)
       break
   }
 }
 
-/**
- * Pagination setter passthrough
- */
 function setPage(p: number) {
   emit('update:page', p)
 }

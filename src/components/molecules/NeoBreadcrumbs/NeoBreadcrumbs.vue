@@ -1,10 +1,10 @@
 <template>
-  <nav class="w-full" role="navigation" :aria-label="props.ariaLabel || 'Breadcrumb'">
+  <nav class="w-full" role="navigation" :aria-label="ariaLabel || 'Breadcrumb'">
     <ol class="flex flex-wrap items-center gap-1 text-sm" role="list">
       <template v-for="(entry, index) in visible" :key="index">
         <li v-if="entry === 'ellipsis'" class="px-1 select-none" aria-hidden="true">…</li>
         <li v-else class="inline-flex items-center gap-1">
-          <template v-if="!entry.current && (entry.href || props.navigateOnClick)">
+          <template v-if="!entry.current && (entry.href || navigateOnClick)">
             <a
               v-if="entry.href"
               class="focus-visible:outline-primary rounded-sm hover:underline focus-visible:outline-2"
@@ -58,7 +58,7 @@
             class="text-utility-darker px-1"
             aria-hidden="true"
           >
-            <slot name="separator">{{ props.separator }}</slot>
+            <slot name="separator">{{ separator }}</slot>
           </span>
         </li>
       </template>
@@ -68,20 +68,19 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { HTMLAttributes, Component } from 'vue'
+import type { Component } from 'vue'
 
-// Local types
 export interface NeoBreadcrumbItem {
   key?: string | number
   href?: string
-  /** Text label for the item */
+
   label: string
-  /** Optional icon component */
+
   icon?: Component
-  /** Whether this item is the current page */
+
   current?: boolean
   disabled?: boolean
-  /** Target for anchor navigation */
+
   target?: '_self' | '_blank' | '_parent' | '_top'
   rel?: string
 }
@@ -91,23 +90,18 @@ export interface NeoBreadcrumbsProps {
   navigateOnClick?: boolean
   separator?: string
   ariaLabel?: string
-  role?: string
-  class?: HTMLAttributes['class']
-  size?: 'sm' | 'md' | 'lg'
 }
 
 export interface NeoBreadcrumbsEmits {
   (e: 'navigate', item: NeoBreadcrumbItem, ev: MouseEvent): void
 }
 
-const props = withDefaults(defineProps<NeoBreadcrumbsProps>(), {
-  items: () => [],
-  navigateOnClick: false,
-  separator: '/',
-  ariaLabel: 'Breadcrumb',
-  role: undefined,
-  class: undefined,
-})
+const {
+  items = [] as NeoBreadcrumbItem[],
+  navigateOnClick = false,
+  separator = '/',
+  ariaLabel = 'Breadcrumb',
+} = defineProps<NeoBreadcrumbsProps>()
 
 const emit = defineEmits<NeoBreadcrumbsEmits>()
 
@@ -115,7 +109,6 @@ const maxVisible = 4
 
 type Entry = NeoBreadcrumbItem | 'ellipsis'
 const visible = computed<Entry[]>(() => {
-  const items = props.items ?? []
   if (items.length <= maxVisible) return items
 
   const first = items[0]
@@ -124,7 +117,7 @@ const visible = computed<Entry[]>(() => {
 })
 
 function onNavigate(item: NeoBreadcrumbItem, ev: MouseEvent) {
-  if (props.navigateOnClick && !item.disabled) {
+  if (navigateOnClick && !item.disabled) {
     emit('navigate', item, ev)
   }
 }

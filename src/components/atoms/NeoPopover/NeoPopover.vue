@@ -71,18 +71,18 @@ export interface NeoPopoverProps {
   disabled?: boolean
 }
 
-const props = withDefaults(defineProps<NeoPopoverProps>(), {
-  modelValue: false,
-  position: 'bottom',
-  dismissible: false,
-  closeOnClickOutside: true,
-  closeOnEsc: true,
-  closeOnClickInSlot: false,
-  offsetDistance: 8,
-  role: 'dialog',
-  id: '',
-  disabled: false,
-})
+const {
+  modelValue = false,
+  position = 'bottom',
+  dismissible = false,
+  closeOnClickOutside = true,
+  closeOnEsc = true,
+  closeOnClickInSlot = false,
+  offsetDistance = 8,
+  role = 'dialog',
+  id = '',
+  disabled = false,
+} = defineProps<NeoPopoverProps>()
 
 interface NeoPopoverEmits {
   (e: 'update:modelValue', value: boolean): void
@@ -92,10 +92,10 @@ const emit = defineEmits<NeoPopoverEmits>()
 
 const triggerRef = ref<HTMLElement | null>(null)
 const popoverRef = ref<HTMLElement | null>(null)
-const open = ref(props.modelValue)
+const open = ref(modelValue)
 const popoverTop = ref(0)
 const popoverLeft = ref(0)
-const popoverId = computed(() => props.id || `popover-${Math.random().toString(36).slice(2, 11)}`)
+const popoverId = computed(() => id || `popover-${Math.random().toString(36).slice(2, 11)}`)
 
 const positionClass = computed(() => {
   const baseClass = {
@@ -103,12 +103,12 @@ const positionClass = computed(() => {
     right: 'origin-left',
     bottom: 'origin-top',
     left: 'origin-right',
-  }[props.position]
+  }[position]
   return baseClass
 })
 
 const togglePopover = () => {
-  if (props.disabled) return
+  if (disabled) return
   open.value = !open.value
 }
 
@@ -127,12 +127,12 @@ const updatePosition = async () => {
   const windowWidth = window.innerWidth
   const windowHeight = window.innerHeight
 
-  const gap = props.offsetDistance
+  const gap = offsetDistance
 
   let top = 0
   let left = 0
 
-  switch (props.position) {
+  switch (position) {
     case 'top':
       top = triggerRect.top - popoverRect.height - gap * 1.5
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
@@ -174,7 +174,7 @@ const updatePosition = async () => {
 }
 
 const handleClickOutside = (event: MouseEvent) => {
-  if (!open.value || !props.closeOnClickOutside) return
+  if (!open.value || !closeOnClickOutside) return
 
   const target = event.target as HTMLElement
   if (
@@ -188,19 +188,19 @@ const handleClickOutside = (event: MouseEvent) => {
 }
 
 const handleEscKey = (event: KeyboardEvent) => {
-  if (open.value && props.closeOnEsc && event.key === 'Escape') {
+  if (open.value && closeOnEsc && event.key === 'Escape') {
     closePopover()
   }
 }
 
 const handleClickInSlot = () => {
-  if (props.closeOnClickInSlot) {
+  if (closeOnClickInSlot) {
     closePopover()
   }
 }
 
 watch(
-  () => props.modelValue,
+  () => modelValue,
   (newValue) => {
     open.value = newValue
     if (newValue) {

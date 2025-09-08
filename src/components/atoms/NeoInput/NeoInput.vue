@@ -47,12 +47,13 @@ export interface NeoInputProps {
   type?: HTMLInputType
 }
 
-withDefaults(defineProps<NeoInputProps>(), {
-  placeholder: '',
-  disabled: false,
-  scaleOnFocus: true,
-  type: 'text',
-})
+const {
+  id,
+  placeholder = '',
+  disabled = false,
+  scaleOnFocus = true,
+  type = 'text',
+} = defineProps<NeoInputProps>()
 
 const model = defineModel<string>()
 

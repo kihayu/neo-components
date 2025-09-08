@@ -7,7 +7,6 @@
     :role="ariaHidden ? undefined : 'img'"
     :aria-label="ariaHidden ? undefined : ariaLabel"
   >
-    <!-- Clone and modify the icon if using Lucide -->
     <slot v-if="!$slots.default || !isLucideIcon" />
     <component v-else :is="iconComponent" :size="pixelSize" :stroke-width="strokeWidth" />
   </div>
@@ -28,22 +27,25 @@ export interface NeoIconProps {
   ariaLabel?: string
 }
 
-const props = withDefaults(defineProps<NeoIconProps>(), {
-  size: 'md',
-  color: 'black',
-  rotate: 0,
-  strokeWidth: 2,
-  ariaHidden: true,
-  ariaLabel: 'Icon',
-})
-
+const {
+  size = 'md',
+  color = 'black',
+  rotate = 0,
+  strokeWidth = 2,
+  ariaHidden = true,
+  ariaLabel = 'Icon',
+} = defineProps<NeoIconProps>()
 const slots = useSlots()
 
 const isLucideIcon = computed(() => {
-  if (!slots.default) return false
+  if (!slots.default) {
+    return false
+  }
 
   const slotContent = slots.default()
-  if (slotContent.length !== 1) return false
+  if (slotContent.length !== 1) {
+    return false
+  }
 
   const component = slotContent[0]
   return (
@@ -57,10 +59,14 @@ const isLucideIcon = computed(() => {
 })
 
 const iconComponent = computed(() => {
-  if (!slots.default || !isLucideIcon.value) return null
+  if (!slots.default || !isLucideIcon.value) {
+    return null
+  }
 
   const slotContent = slots.default()
-  if (slotContent.length !== 1) return null
+  if (slotContent.length !== 1) {
+    return null
+  }
 
   return slotContent[0].type
 })
@@ -74,7 +80,7 @@ const pixelSize = computed(() => {
     xl: 40,
     '2xl': 48,
   }
-  return sizes[props.size]
+  return sizes[size]
 })
 
 const colorClass = computed(() => {
@@ -87,6 +93,6 @@ const colorClass = computed(() => {
     white: 'text-white',
     inherit: 'text-inherit',
   }
-  return colors[props.color]
+  return colors[color]
 })
 </script>

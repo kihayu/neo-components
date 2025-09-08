@@ -1,38 +1,38 @@
 <template>
-  <div class="flex w-full flex-col gap-y-1.5" :class="props.class">
+  <div class="flex w-full flex-col gap-y-1.5">
     <div class="font-primary text-sm font-bold text-black">
       <slot name="label">
         <NeoLabel
           :forId="computedId"
           class="transition-colors duration-300 ease-in-out"
-          :class="{ 'cursor-not-allowed opacity-65': props.disabled, 'text-primary': inFocus }"
+          :class="{ 'cursor-not-allowed opacity-65': disabled, 'text-primary': inFocus }"
         >
-          {{ props.label }}
+          {{ label }}
         </NeoLabel>
       </slot>
 
       <div
-        v-if="$slots.description || props.description"
+        v-if="$slots.description || description"
         :id="descId"
         class="text-utility-darker mt-1 text-xs"
       >
-        <slot name="description">{{ props.description }}</slot>
+        <slot name="description">{{ description }}</slot>
       </div>
     </div>
 
     <NeoTextarea
       v-model="model"
       :id="computedId"
-      :name="props.name"
-      :placeholder="props.placeholder"
-      :rows="props.rows"
-      :maxlength="props.maxlength"
-      :disabled="props.disabled"
-      :required="props.required"
-      :invalid="props.invalid"
-      :aria-label="props.ariaLabel"
+      :name="name"
+      :placeholder="placeholder"
+      :rows="rows"
+      :maxlength="maxlength"
+      :disabled="disabled"
+      :required="required"
+      :invalid="invalid"
+      :aria-label="ariaLabel"
       :aria-describedby="computedDescribedby"
-      :show-counter="props.showCounter"
+      :show-counter="showCounter"
       @focus="onFocus"
       @blur="onBlur"
       @keydown="onKeydown"
@@ -49,8 +49,8 @@
       </template>
     </NeoTextarea>
 
-    <div v-if="$slots.helper || props.helperText" class="text-utility-darker text-xs">
-      <slot name="helper">{{ props.helperText }}</slot>
+    <div v-if="$slots.helper || helperText" class="text-utility-darker text-xs">
+      <slot name="helper">{{ helperText }}</slot>
     </div>
   </div>
 </template>
@@ -59,10 +59,9 @@
 import { computed, ref, useSlots } from 'vue'
 import NeoLabel from '@/components/atoms/NeoLabel/NeoLabel.vue'
 import NeoTextarea from '@/components/atoms/NeoTextarea/NeoTextarea.vue'
-import type { HTMLAttributes } from 'vue'
 
 export interface NeoLabeledTextareaProps {
-  modelValue: string
+  defaultValue?: string
   id?: string
   name?: string
   label: string
@@ -77,8 +76,6 @@ export interface NeoLabeledTextareaProps {
   showCounter?: boolean
   ariaLabel?: string
   ariaDescribedby?: string
-  role?: string
-  class?: HTMLAttributes['class']
 }
 
 export interface NeoLabeledTextareaEmits {
@@ -91,43 +88,52 @@ export interface NeoLabeledTextareaEmits {
   (e: 'keyup', ev: KeyboardEvent): void
 }
 
-const props = withDefaults(defineProps<NeoLabeledTextareaProps>(), {
-  modelValue: '',
-  id: undefined,
-  name: undefined,
-  label: '',
-  description: undefined,
-  helperText: undefined,
-  required: false,
-  disabled: false,
-  invalid: false,
-  placeholder: '',
-  rows: 3,
-  maxlength: undefined,
-  showCounter: false,
-  ariaLabel: undefined,
-  ariaDescribedby: undefined,
-  role: undefined,
-  class: undefined,
-})
+const {
+  id,
+  defaultValue = '',
+  name = undefined,
+  label = '',
+  description = undefined,
+  helperText = undefined,
+  required = false,
+  disabled = false,
+  invalid = false,
+  placeholder = '',
+  rows = 3,
+  maxlength = undefined,
+  showCounter = false,
+  ariaLabel = undefined,
+  ariaDescribedby = undefined,
+} = defineProps<NeoLabeledTextareaProps>()
 
 const model = defineModel<string>({ default: '' })
+
+if (defaultValue !== '') {
+  model.value = defaultValue
+}
+
 const emit = defineEmits<NeoLabeledTextareaEmits>()
 
 const inFocus = ref(false)
 
 const uid = `neo-ltextarea-${Math.random().toString(36).slice(2, 10)}`
-const computedId = computed(() => props.id ?? uid)
+const computedId = computed(() => id ?? uid)
 
 const slots = useSlots()
 const descId = computed(() =>
-  props.description || !!slots.description ? `${computedId.value}-desc` : undefined,
+  description || !!slots.description ? `${computedId.value}-desc` : undefined,
 )
 
 const computedDescribedby = computed(() => {
   const ids: string[] = []
-  if (props.ariaDescribedby) ids.push(props.ariaDescribedby)
-  if (descId.value) ids.push(descId.value)
+  if (ariaDescribedby) {
+    ids.push(ariaDescribedby)
+  }
+
+  if (descId.value) {
+    ids.push(descId.value)
+  }
+
   return ids.length ? ids.join(' ') : undefined
 })
 

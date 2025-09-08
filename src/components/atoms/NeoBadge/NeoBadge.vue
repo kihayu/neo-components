@@ -13,7 +13,6 @@
     @keydown="onKeydown"
     @keyup="onKeyup"
   >
-    <!-- Leading icon / dot -->
     <span
       v-if="dot"
       :class="['relative inline-flex items-center justify-center', dotWrapperClasses]"
@@ -30,12 +29,10 @@
       <slot v-else name="leading" />
     </span>
 
-    <!-- Content -->
     <span class="inline-flex items-center">
       <slot />
     </span>
 
-    <!-- Trailing icon -->
     <span
       v-if="$slots.trailing || trailingIcon"
       class="inline-flex items-center"
@@ -52,7 +49,6 @@ import { computed } from 'vue'
 import type { HTMLAttributes, ButtonHTMLAttributes, Component } from 'vue'
 import { cn } from '@/lib/utils'
 
-// Local props/emits
 export type NeoSize = 'sm' | 'md' | 'lg'
 export interface NeoBadgeProps {
   variant?: 'default' | 'neutral' | 'info' | 'success' | 'warning' | 'error' | 'outline'
@@ -76,33 +72,31 @@ export interface NeoBadgeEmits {
   (e: 'keyup', ev: KeyboardEvent): void
 }
 
-const props = withDefaults(defineProps<NeoBadgeProps>(), {
-  variant: 'default',
-  size: 'md',
-  pill: false,
-  dot: false,
-  ariaLabel: undefined,
-  role: undefined,
-  class: undefined,
-  leadingIcon: undefined,
-  trailingIcon: undefined,
-  asButton: false,
-  disabled: false,
-})
+const {
+  variant = 'default',
+  size = 'md',
+  pill = false,
+  dot = false,
+  ariaLabel = undefined,
+  role = undefined,
+  class: className = undefined,
+  leadingIcon = undefined,
+  trailingIcon = undefined,
+  asButton = false,
+  disabled = false,
+} = defineProps<NeoBadgeProps>()
 
 const emit = defineEmits<NeoBadgeEmits>()
 
-/** Size scale: compact by design (tighter than NeoTag) */
 const sizeClasses = computed(() => {
   const map = {
     sm: 'text-[10px] px-2 py-0.5',
     md: 'text-xs px-2.5 py-1',
     lg: 'text-sm px-3 py-1',
   } as const
-  return map[props.size ?? 'md']
+  return map[size ?? 'md']
 })
 
-/** Variant styling aligned with project palette */
 const variantClasses = computed(() => {
   const baseText = 'text-black'
   const map = {
@@ -114,34 +108,30 @@ const variantClasses = computed(() => {
     error: `bg-error ${baseText}`,
     outline: 'bg-white text-black',
   } as const
-  return map[props.variant ?? 'default']
+  return map[variant ?? 'default']
 })
 
-/** Shape */
-const shapeClasses = computed(() => (props.pill ? 'rounded-full' : 'rounded-lg'))
+const shapeClasses = computed(() => (pill ? 'rounded-full' : 'rounded-lg'))
 
-/** Disabled/interactive */
 const interactiveClasses = computed(() =>
-  props.asButton
+  asButton
     ? cn(
         'focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-60 disabled:cursor-not-allowed',
       )
     : '',
 )
 
-/** Root composed classes */
 const rootClasses = computed(() =>
   cn(
     sizeClasses.value,
     variantClasses.value,
     shapeClasses.value,
     interactiveClasses.value,
-    props.class,
+    className,
   ),
 )
 
-/** Dot helpers */
-const dotWrapperClasses = computed(() => (props.size === 'sm' ? 'pl-0.5 pr-0' : 'pl-0.5 pr-0'))
+const dotWrapperClasses = computed(() => (size === 'sm' ? 'pl-0.5 pr-0' : 'pl-0.5 pr-0'))
 const dotColorClasses = computed(() => {
   const map = {
     default: 'bg-primary',
@@ -152,10 +142,9 @@ const dotColorClasses = computed(() => {
     error: 'bg-error',
     outline: 'bg-black',
   } as const
-  return map[props.variant ?? 'default']
+  return map[variant ?? 'default']
 })
 
-/** Emits */
 function onClick(ev: MouseEvent) {
   emit('click', ev)
 }

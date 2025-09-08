@@ -1,12 +1,10 @@
 <template>
-  <!-- Text shape: render multiple lines -->
   <div
     v-if="shape === 'text'"
     class="flex w-full flex-col gap-2"
-    :class="props.class"
-    :role="props.role"
-    :aria-label="props.ariaLabel"
-    :aria-hidden="!props.ariaLabel && !props.role ? 'true' : undefined"
+    :role="role"
+    :aria-label="ariaLabel"
+    :aria-hidden="!ariaLabel && !role ? 'true' : undefined"
   >
     <div
       v-for="n in linesComputed"
@@ -18,15 +16,14 @@
     />
   </div>
 
-  <!-- Rect/Circle/Inline -->
   <div
     v-else
     class="relative overflow-hidden"
-    :class="[rootClasses, props.class]"
+    :class="rootClasses"
     :style="rootStyle"
-    :role="props.role"
-    :aria-label="props.ariaLabel"
-    :aria-hidden="!props.ariaLabel && !props.role ? 'true' : undefined"
+    :role="role"
+    :aria-label="ariaLabel"
+    :aria-hidden="!ariaLabel && !role ? 'true' : undefined"
   >
     <slot />
   </div>
@@ -37,7 +34,6 @@ import { computed } from 'vue'
 import type { CSSProperties, HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
-// Local props interface
 export type NeoSize = 'sm' | 'md' | 'lg'
 export interface NeoSkeletonProps {
   width?: number | string
@@ -53,25 +49,22 @@ export interface NeoSkeletonProps {
   class?: HTMLAttributes['class']
 }
 
-const props = withDefaults(defineProps<NeoSkeletonProps>(), {
-  width: undefined,
-  height: undefined,
-  radius: undefined,
-  shape: 'rect',
-  lines: 3,
-  animated: true,
-  variant: 'default',
-  size: 'md',
-  ariaLabel: undefined,
-  role: undefined,
-  class: undefined,
-})
+const {
+  width = undefined,
+  height = undefined,
+  radius = undefined,
+  shape = 'rect',
+  lines = 3,
+  animated = true,
+  variant = 'default',
+  size = 'md',
+  ariaLabel = undefined,
+  role = undefined,
+} = defineProps<NeoSkeletonProps>()
 
-/** Helpers */
-const shape = computed(() => props.shape)
 const sizePx = computed(() => {
   const map = { sm: 12, md: 16, lg: 20 } as const
-  return map[props.size ?? 'md']
+  return map[size ?? 'md']
 })
 
 function toCssSize(v?: number | string): string | undefined {
@@ -79,49 +72,42 @@ function toCssSize(v?: number | string): string | undefined {
   return typeof v === 'number' ? `${v}px` : v
 }
 
-const linesComputed = computed(() => Math.max(1, props.lines ?? 3))
+const linesComputed = computed(() => Math.max(1, lines ?? 3))
 
-/** Variants */
 const variantClass = computed(() => {
   const map = {
     default: 'bg-utility-dark/20',
     muted: 'bg-utility-dark/10',
     contrast: 'bg-black/20',
   } as const
-  return map[props.variant ?? 'default']
+  return map[variant ?? 'default']
 })
 
-/** Animation */
-const animatedClass = computed(() => (props.animated ? 'neo-shimmer' : ''))
+const animatedClass = computed(() => (animated ? 'neo-shimmer' : ''))
 
-/** Root classes for non-text shapes */
 const rootClasses = computed(() =>
   cn('rounded-md border-4 border-black', variantClass.value, animatedClass.value, {
-    'inline-block align-middle': props.shape === 'inline',
-    'rounded-full': props.shape === 'circle',
+    'inline-block align-middle': shape === 'inline',
+    'rounded-full': shape === 'circle',
   }),
 )
 
-/** Root inline style */
 const rootStyle = computed<CSSProperties>(() => {
   const style: CSSProperties = {}
-  // Defaults per shape if not provided
-  if (shape.value === 'circle') {
-    const d = props.width ?? props.height ?? sizePx.value * 2
+
+  if (shape === 'circle') {
+    const d = width ?? height ?? sizePx.value * 2
     style.width = toCssSize(d)
     style.height = toCssSize(d)
     style.borderRadius = '9999px'
   } else {
-    // rect / inline
-    style.width =
-      toCssSize(props.width) ?? (shape.value === 'inline' ? toCssSize(sizePx.value * 6) : '100%')
-    style.height = toCssSize(props.height) ?? toCssSize(sizePx.value)
-    if (props.radius !== undefined) style.borderRadius = toCssSize(props.radius)
+    style.width = toCssSize(width) ?? (shape === 'inline' ? toCssSize(sizePx.value * 6) : '100%')
+    style.height = toCssSize(height) ?? toCssSize(sizePx.value)
+    if (radius !== undefined) style.borderRadius = toCssSize(radius)
   }
   return style
 })
 
-/** Line style for text shape */
 const lineStyle = (n: number): CSSProperties => {
   const isLast = n === linesComputed.value
   const width = isLast ? '60%' : '100%'

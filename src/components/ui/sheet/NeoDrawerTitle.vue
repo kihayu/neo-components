@@ -15,6 +15,5 @@ import { DialogTitle, type DialogTitleProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
 const props = defineProps<DialogTitleProps & { class?: HTMLAttributes['class'] }>()
-
 const delegated = reactiveOmit(props, 'class')
 </script>

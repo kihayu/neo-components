@@ -1,6 +1,5 @@
 <template>
-  <!-- Toast Viewport -->
-  <div :class="cn('pointer-events-none fixed z-[60] space-y-2 p-4', containerClasses, props.class)">
+  <div :class="cn('pointer-events-none fixed z-[60] space-y-2 p-4', containerClasses)">
     <NeoToast
       v-for="t in visibleToasts"
       :key="t.id"
@@ -11,7 +10,6 @@
     />
   </div>
 
-  <!-- Live region for screen readers (polite by default) -->
   <div class="sr-only" aria-live="polite" aria-atomic="true">
     <template v-for="sr in politeQueue" :key="sr.key">
       {{ sr.text }}
@@ -38,7 +36,6 @@ export interface NeoToastProviderProps {
   class?: HTMLAttributes['class']
 }
 
-// Local toast props shape (mirrors NeoToastProps)
 export interface ToastProps {
   id: string | number
   title?: string
@@ -49,24 +46,11 @@ export interface ToastProps {
   actionText?: string
   ariaLabel?: string
   role?: 'status' | 'alert'
-  class?: HTMLAttributes['class']
 }
 
 type ToastInput = Omit<ToastProps, 'id'> & { id?: string | number }
 
-/**
- * Provider props (queue settings, position)
- */
-const props = withDefaults(defineProps<NeoToastProviderProps>(), {
-  max: 3,
-  duration: 4000,
-  position: 'top-right',
-  class: undefined,
-})
-
-/**
- * Internal state: visible toasts and queued toasts beyond max
- */
+const { max = 3, duration = 4000, position = 'top-right' } = defineProps<NeoToastProviderProps>()
 const state = reactive<{
   visibleToasts: ToastProps[]
   queue: ToastProps[]
@@ -83,9 +67,6 @@ const state = reactive<{
 
 const { visibleToasts, politeQueue } = toRefs(state)
 
-/**
- * Position classes
- */
 const containerClasses = computed(() => {
   const map: Record<Required<NeoToastProviderProps>['position'], string> = {
     'top-left': 'left-0 top-0',
@@ -95,12 +76,9 @@ const containerClasses = computed(() => {
     'bottom-center': 'bottom-0 left-1/2 -translate-x-1/2',
     'bottom-right': 'bottom-0 right-0',
   }
-  return map[(props.position as Required<NeoToastProviderProps>['position']) ?? 'top-right']
+  return map[(position as Required<NeoToastProviderProps>['position']) ?? 'top-right']
 })
 
-/**
- * Helpers
- */
 function nextId(): number {
   state.counter += 1
   return state.counter
@@ -109,7 +87,7 @@ function nextId(): number {
 function scheduleDismiss(id: string | number, ms?: number) {
   const timeout = window.setTimeout(() => {
     removeToast(id)
-  }, ms ?? props.duration)
+  }, ms ?? duration)
   state.timers.set(id, timeout)
 }
 
@@ -122,18 +100,17 @@ function clearTimer(id: string | number) {
 }
 
 function removeToast(id: string | number) {
-  // remove from visible
   const idx = state.visibleToasts.findIndex((t) => t.id === id)
   if (idx !== -1) {
     state.visibleToasts.splice(idx, 1)
   }
   clearTimer(id)
-  // promote next from queue
-  if (state.queue.length > 0 && state.visibleToasts.length < (props.max ?? 3)) {
+
+  if (state.queue.length > 0 && state.visibleToasts.length < (max ?? 3)) {
     const next = state.queue.shift()!
     state.visibleToasts.push(next)
-    scheduleDismiss(next.id, next.duration ?? props.duration)
-    // Add polite live text
+    scheduleDismiss(next.id, next.duration ?? duration)
+
     enqueuePolite(next)
   }
 }
@@ -143,13 +120,10 @@ function enqueuePolite(t: ToastProps) {
   if (!text) return
   const key = `${t.id}`
   state.politeQueue.push({ key, text })
-  // Keep live region small
+
   if (state.politeQueue.length > 5) state.politeQueue.shift()
 }
 
-/**
- * Public API: push toasts
- */
 function push(toast: ToastInput): string | number {
   const id = toast.id ?? nextId()
   const entry: ToastProps = {
@@ -157,15 +131,14 @@ function push(toast: ToastInput): string | number {
     title: toast.title ?? '',
     description: toast.description ?? '',
     variant: toast.variant ?? 'default',
-    duration: toast.duration ?? props.duration,
+    duration: toast.duration ?? duration,
     closable: toast.closable ?? true,
     actionText: toast.actionText,
     ariaLabel: toast.ariaLabel,
     role: toast.role ?? 'status',
-    class: toast.class,
   }
 
-  if (state.visibleToasts.length < (props.max ?? 3)) {
+  if (state.visibleToasts.length < (max ?? 3)) {
     state.visibleToasts.push(entry)
     scheduleDismiss(id, entry.duration)
     enqueuePolite(entry)
@@ -179,28 +152,16 @@ function dismiss(id: string | number) {
   removeToast(id)
 }
 
-/**
- * Handlers from child items
- */
 function onDismiss(id: string | number) {
   dismiss(id)
 }
 
 function onAction(id: string | number) {
-  // For now just dismiss; external listeners can react via events on NeoToast
   dismiss(id)
 }
 
-/**
- * Expose imperative API for consumers (e.g., stories)
- */
 defineExpose({
   push,
   dismiss,
 })
-
-/**
- * SR-only queue for polite announcements
- * (already exposed via toRefs above)
- */
 </script>

@@ -18,10 +18,7 @@ export interface NeoOptionProps {
   selected?: boolean
 }
 
-withDefaults(defineProps<NeoOptionProps>(), {
-  show: false,
-  selected: false,
-})
+const { show = false, selected = false } = defineProps<NeoOptionProps>()
 
 interface NeoOptionsEmits {
   (event: 'click'): void

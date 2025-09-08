@@ -1,38 +1,35 @@
 <template>
   <div
     data-slot="toast"
-    :role="props.role ?? 'status'"
-    :aria-label="props.ariaLabel"
-    :class="cn(toastVariants({ variant: props.variant }), props.class)"
+    :role="role ?? 'status'"
+    :aria-label="ariaLabel"
+    :class="cn(toastVariants({ variant }), className)"
   >
-    <!-- Icon -->
-    <slot name="icon">
-      <!-- no default icon -->
-    </slot>
+    <slot name="icon"> </slot>
 
-    <!-- Content -->
     <div class="col-start-2 row-span-2 grid gap-1">
       <div class="font-primary line-clamp-2 font-bold">
         <slot name="title">
-          {{ props.title }}
+          {{ title }}
         </slot>
       </div>
       <div class="text-muted-foreground font-secondary text-sm">
         <slot name="description">
-          {{ props.description }}
+          {{ description }}
         </slot>
       </div>
     </div>
 
-    <!-- Actions -->
     <div class="col-start-3 row-span-2 ml-4 flex items-start gap-2">
       <slot name="action">
-        <NeoButton v-if="props.actionText" :aria-label="props.actionText" @click="onAction">
-          {{ props.actionText }}
+        <NeoButton v-if="actionText" :aria-label="actionText" @click="onAction">
+          {{ actionText }}
         </NeoButton>
       </slot>
       <slot name="close">
-        <NeoButton v-if="props.closable" aria-label="Dismiss" @click="onDismiss"> × </NeoButton>
+        <NeoButton v-if="closable" aria-label="Dismiss" @click="onDismiss">
+          <X />
+        </NeoButton>
       </slot>
     </div>
   </div>
@@ -44,6 +41,7 @@ import { toastVariants } from '.'
 import type { HTMLAttributes } from 'vue'
 import type { NeoToastVariants } from '.'
 import NeoButton from '@/components/atoms/NeoButton/NeoButton.vue'
+import { X } from 'lucide-vue-next'
 
 export interface NeoToastProps {
   id: string | number
@@ -63,26 +61,24 @@ export interface NeoToastEmits {
   (e: 'action', id: string | number): void
 }
 
-const props = withDefaults(defineProps<NeoToastProps>(), {
-  id: () => Math.random().toString(36).slice(2),
-  title: '',
-  description: '',
-  variant: 'default',
-  duration: undefined,
-  closable: true,
-  actionText: undefined,
-  ariaLabel: undefined,
-  role: 'status',
-  class: undefined,
-})
-
+const {
+  id,
+  title = '',
+  description = '',
+  variant = 'default',
+  closable = true,
+  actionText = undefined,
+  ariaLabel = undefined,
+  role = 'status',
+  class: className = undefined,
+} = defineProps<NeoToastProps>()
 const emit = defineEmits<NeoToastEmits>()
 
 function onDismiss() {
-  emit('dismiss', props.id)
+  emit('dismiss', id)
 }
 
 function onAction() {
-  emit('action', props.id)
+  emit('action', id)
 }
 </script>

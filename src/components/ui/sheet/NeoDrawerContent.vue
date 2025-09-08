@@ -41,13 +41,9 @@ const props = defineProps<
     side?: DrawerContentVariants['side']
   }
 >()
-
 const delegated = reactiveOmit(props, 'class', 'size', 'side')
 const forwarded = useForwardProps(delegated)
 
-/**
- * Side anchoring utility classes for placement
- */
 const sidePositionClass = computed(() => {
   const s = (props.side as NonNullable<DrawerContentVariants['side']>) ?? 'right'
   switch (s) {

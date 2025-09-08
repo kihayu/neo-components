@@ -61,35 +61,34 @@ export interface NeoAccordionProps {
   allowToggle?: boolean
 }
 
-const props = withDefaults(defineProps<NeoAccordionProps>(), {
-  title: 'Accordion Title',
-  modelValue: false,
-  id: '',
-  disabled: false,
-  allowToggle: true,
-})
-
+const {
+  title = 'Accordion Title',
+  modelValue = false,
+  id = '',
+  disabled = false,
+  allowToggle = true,
+} = defineProps<NeoAccordionProps>()
 interface NeoAccordionEmits {
   (e: 'update:modelValue', value: boolean): void
 }
 
 const emit = defineEmits<NeoAccordionEmits>()
 
-const isOpen = ref(props.modelValue)
-const baseId = computed(() => props.id || `accordion-${Math.random().toString(36).slice(2, 11)}`)
+const isOpen = ref(modelValue)
+const baseId = computed(() => id || `accordion-${Math.random().toString(36).slice(2, 11)}`)
 const headerId = computed(() => `${baseId.value}-header`)
 const contentId = computed(() => `${baseId.value}-content`)
 
 const toggleAccordion = () => {
-  if (props.disabled) return
-  if (!props.allowToggle && isOpen.value) return
+  if (disabled) return
+  if (!allowToggle && isOpen.value) return
 
   isOpen.value = !isOpen.value
   emit('update:modelValue', isOpen.value)
 }
 
 watch(
-  () => props.modelValue,
+  () => modelValue,
   (newValue) => {
     isOpen.value = newValue
   },

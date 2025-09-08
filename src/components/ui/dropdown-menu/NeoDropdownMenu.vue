@@ -1,6 +1,5 @@
 <template>
-  <DropdownMenuRoot :open="openState" :modal="props.modal" @update:open="onOpenChange">
-    <!-- Trigger -->
+  <DropdownMenuRoot :open="openState" :modal="modal" @update:open="onOpenChange">
     <DropdownMenuTrigger as-child>
       <slot name="trigger">
         <NeoButton>
@@ -10,29 +9,24 @@
       </slot>
     </DropdownMenuTrigger>
 
-    <!-- Content -->
     <DropdownMenuContent
       :class="contentClass"
-      :align="props.align"
-      :side="props.side"
-      :side-offset="props.sideOffset"
-      :aria-label="props.ariaLabel"
+      :align="align"
+      :side="side"
+      :side-offset="sideOffset"
+      :aria-label="ariaLabel"
       role="menu"
     >
       <slot name="content" />
 
-      <!-- Render from items prop when provided -->
-      <template v-if="props.items?.length">
-        <template v-for="(it, idx) in props.items" :key="idx">
-          <!-- Label -->
+      <template v-if="items?.length">
+        <template v-for="(it, idx) in items" :key="idx">
           <DropdownMenuLabel v-if="it.type === 'label'">
             <slot name="label" :text="it.label">{{ it.label }}</slot>
           </DropdownMenuLabel>
 
-          <!-- Separator -->
           <DropdownMenuSeparator v-else-if="it.type === 'separator'" />
 
-          <!-- Group (semantic only for now) -->
           <DropdownMenuGroup v-else-if="it.type === 'group'">
             <slot name="group" :id="it.group">
               <span class="px-2 py-1.5 text-xs font-bold tracking-wide text-black/60 uppercase">
@@ -41,7 +35,6 @@
             </slot>
           </DropdownMenuGroup>
 
-          <!-- Checkbox item -->
           <DropdownMenuCheckboxItem
             v-else-if="it.type === 'checkbox'"
             :disabled="!!it.disabled"
@@ -58,7 +51,6 @@
             </div>
           </DropdownMenuCheckboxItem>
 
-          <!-- Radio item -->
           <DropdownMenuRadioGroup
             v-else-if="it.type === 'radio'"
             :value="radioGroupValue()"
@@ -82,7 +74,6 @@
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
 
-          <!-- Regular item -->
           <DropdownMenuItem
             v-else
             :disabled="!!it.disabled"
@@ -124,7 +115,6 @@ import { dropdownMenuContentVariants, type DropdownMenuContentVariants } from '.
 import type { HTMLAttributes, Component } from 'vue'
 import NeoButton from '@/components/atoms/NeoButton/NeoButton.vue'
 
-// Local types
 export type NeoAlign = 'start' | 'center' | 'end'
 export type NeoSide = 'top' | 'right' | 'bottom' | 'left'
 
@@ -133,11 +123,11 @@ export interface NeoDropdownMenuItem<T = string> {
   label: string
   value?: T
   disabled?: boolean
-  /** Checkable or radio modes */
+
   type?: 'item' | 'checkbox' | 'radio' | 'separator' | 'label' | 'group'
   checked?: boolean
   icon?: Component
-  /** Grouping id for radio items */
+
   group?: string
 }
 
@@ -145,14 +135,14 @@ export interface NeoDropdownMenuProps<T = string> {
   open?: boolean
   modal?: boolean
   items?: NeoDropdownMenuItem<T>[]
-  /** Align and side preferences */
+
   align?: NeoAlign
   side?: NeoSide
   sideOffset?: number
-  /** Selection model for radio/checkbox items */
+
   radioValue?: string | null
   checkboxValues?: Record<string, boolean>
-  /** ARIA/class */
+
   ariaLabel?: string
   role?: 'menu'
   class?: HTMLAttributes['class']
@@ -170,29 +160,25 @@ export type { NeoDropdownMenuItem as Item }
 export type NeoDropdownMenuPropsContract = NeoDropdownMenuProps
 export type NeoDropdownMenuEmitsContract = NeoDropdownMenuEmits
 
-const props = withDefaults(defineProps<NeoDropdownMenuProps>(), {
-  open: undefined,
-  modal: true,
-  items: () => [],
-  align: 'start',
-  side: 'bottom',
-  sideOffset: 8,
-  radioValue: null,
-  checkboxValues: () => ({}) as Record<string, boolean>,
-  ariaLabel: undefined,
-  role: 'menu',
-  class: undefined,
-  size: 'md',
-})
+const { open, modal, items, align, side, sideOffset, radioValue, checkboxValues, ariaLabel, size } =
+  withDefaults(defineProps<NeoDropdownMenuProps<string>>(), {
+    open: undefined,
+    modal: true,
+    items: () => [] as NeoDropdownMenuItem<string>[],
+    align: 'start' as NeoAlign,
+    side: 'bottom' as NeoSide,
+    sideOffset: 8,
+    radioValue: null,
+    checkboxValues: () => ({}) as Record<string, boolean>,
+    ariaLabel: undefined,
+    size: 'md' as DropdownMenuContentVariants['size'],
+  })
 
-const emit = defineEmits<NeoDropdownMenuEmits>()
+const emit = defineEmits<NeoDropdownMenuEmits<string>>()
 
-/**
- * Controlled/uncontrolled open state
- */
-const openState = ref(!!props.open)
+const openState = ref(!!open)
 watch(
-  () => props.open,
+  () => open,
   (v) => {
     if (typeof v === 'boolean') openState.value = v
   },
@@ -204,49 +190,36 @@ function onOpenChange(v: boolean) {
   emit('openChange', v)
 }
 
-/**
- * Sizing via CVA
- */
 const contentClass = computed(() =>
   dropdownMenuContentVariants({
-    size: (props.size as NonNullable<DropdownMenuContentVariants['size']>) ?? 'md',
+    size: (size as NonNullable<DropdownMenuContentVariants['size']>) ?? 'md',
   }),
 )
 
-/**
- * Checkbox helpers
- */
 function keyOf(item: NeoDropdownMenuItem) {
   return String(item.value ?? item.label)
 }
 function isCheckboxChecked(item: NeoDropdownMenuItem) {
   const key = keyOf(item)
-  return !!props.checkboxValues?.[key]
+  return !!checkboxValues?.[key]
 }
 function onCheckboxToggle(item: NeoDropdownMenuItem) {
   const key = keyOf(item)
-  const next = { ...(props.checkboxValues ?? {}) }
+  const next = { ...(checkboxValues ?? {}) }
   next[key] = !next[key]
   emit('select', { item })
-  // Consumers manage checkboxValues as controlled state; we do not mutate props.
 }
 
-/**
- * Radio helpers
- */
 function radioGroupValue() {
-  return props.radioValue
+  return radioValue
 }
 function onRadioChange(val: string) {
   emit('select', { item: { label: val, value: val, type: 'radio' } })
 }
 
-/**
- * Regular item selection
- */
 function onSelect(item: NeoDropdownMenuItem) {
   emit('select', { item })
-  // Close on selection for standard items
+
   onOpenChange(false)
 }
 </script>

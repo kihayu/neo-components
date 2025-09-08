@@ -33,14 +33,9 @@ export interface NeoTabProps {
   disabled?: boolean
 }
 
-const props = withDefaults(defineProps<NeoTabProps>(), {
-  id: '',
-  contentId: '',
-  selected: false,
-  disabled: false,
-})
+const { id = '', contentId = '', selected = false, disabled = false } = defineProps<NeoTabProps>()
 
-const isSelected = computed(() => props.selected)
+const isSelected = computed(() => selected)
 
 interface NeoTabEmits {
   (e: 'select'): void

@@ -81,16 +81,13 @@ const {
 } = defineProps<NeoSliderProps>()
 
 const model = defineModel<number[]>()
-// Ensure model has an initial value when not provided by parent
+
 if (model.value == null) {
   model.value = defaultValue
 }
 
 const emit = defineEmits<NeoSliderEmits>()
 
-/**
- * Emit 'change' continuously as the slider value changes
- */
 watch(
   () => model?.value,
   (val) => {
@@ -101,16 +98,11 @@ watch(
   { deep: true },
 )
 
-/**
- * Emit 'commit' when interaction ends (mouse/touch/keyboard)
- */
 function onCommit() {
   if (model?.value) {
     emit('commit', model.value, new Event('change'))
   }
 }
-
-// model is initialized above to avoid undefined during initial render
 
 function thumbAriaLabel(i: number) {
   if (ariaLabel) return `${ariaLabel} thumb ${i + 1}`

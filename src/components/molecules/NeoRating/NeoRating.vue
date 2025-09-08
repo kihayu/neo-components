@@ -33,7 +33,6 @@
     >
       <span class="sr-only">{{ itemAriaLabel(i) }}</span>
 
-      <!-- Default icons with slots override -->
       <template v-if="isHalf(i)">
         <slot name="iconHalf" :index="i">
           <StarHalf class="text-primary size-5 md:size-6" />
@@ -127,7 +126,6 @@ function itemAriaLabel(i: number) {
 }
 
 function ariaChecked(i: number) {
-  // Mark the star that corresponds to the rounded value as checked for AT
   const current = Math.ceil(displayValue.value)
   return current === i
 }
@@ -141,7 +139,7 @@ function setValue(v: number, from: 'click' | 'keyboard') {
   const next = clampValue(v)
   if (allowClear && next === model.value && from === 'click') {
     model.value = 0
-    // Clear hover so visual state reflects the cleared selection immediately
+
     hoverValue.value = null
     emit('change', 0)
     return
@@ -150,7 +148,7 @@ function setValue(v: number, from: 'click' | 'keyboard') {
     model.value = next
     emit('change', next)
   }
-  // After any selection via click/keyboard, reset hover override so stars reflect the model
+
   if (from === 'click' || from === 'keyboard') {
     hoverValue.value = null
   }
@@ -209,13 +207,9 @@ function onItemMouseLeave() {
   emit('hoverChange', null)
 }
 
-function onFocus() {
-  // pass-through for consumers if needed in future
-}
+function onFocus() {}
 
-function onBlur() {
-  // pass-through for consumers if needed in future
-}
+function onBlur() {}
 
 function onKeydown(e: KeyboardEvent, i: number) {
   if (disabled || readonly) {
@@ -242,7 +236,5 @@ function onKeydown(e: KeyboardEvent, i: number) {
   }
 }
 
-function onKeyup() {
-  // no-op, reserved for future announcements
-}
+function onKeyup() {}
 </script>

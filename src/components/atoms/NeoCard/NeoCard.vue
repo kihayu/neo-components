@@ -40,10 +40,7 @@ export interface NeoCardProps {
   dismissible?: boolean
 }
 
-withDefaults(defineProps<NeoCardProps>(), {
-  shadow: false,
-  dismissible: false,
-})
+const { shadow = false, dismissible = false } = defineProps<NeoCardProps>()
 
 interface NeoCardEmits {
   (event: 'close'): void

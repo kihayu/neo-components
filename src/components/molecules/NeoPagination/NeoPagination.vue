@@ -2,11 +2,11 @@
   <nav
     class="inline-flex items-center gap-1"
     role="navigation"
-    :aria-label="props.ariaLabel || 'Pagination'"
+    :aria-label="ariaLabel || 'Pagination'"
   >
     <component
       :is="slots.first ? 'div' : NeoButton"
-      v-if="!props.hideFirstLast"
+      v-if="!hideFirstLast"
       :disabled="isFirstDisabled"
       class="min-w-9"
       @click="goTo(1)"
@@ -19,12 +19,12 @@
 
     <component
       :is="slots.previous ? 'div' : NeoButton"
-      v-if="!props.hidePrevNext"
+      v-if="!hidePrevNext"
       :disabled="isPrevDisabled"
       class="min-w-9"
-      @click="goTo(props.page - 1)"
+      @click="goTo(page - 1)"
     >
-      <slot name="previous" :disabled="isPrevDisabled" :go="() => goTo(props.page - 1)">
+      <slot name="previous" :disabled="isPrevDisabled" :go="() => goTo(page - 1)">
         <ChevronLeft class="h-4 w-4" aria-hidden="true" />
         <span class="sr-only">Previous</span>
       </slot>
@@ -35,16 +35,16 @@
         v-if="typeof it === 'number'"
         class="aspect-square"
         :extend-on-hover="false"
-        :aria-current="it === props.page ? 'page' : undefined"
-        :disabled="props.disabled"
+        :aria-current="it === page ? 'page' : undefined"
+        :disabled="disabled"
         size="sm"
         @click="goTo(it)"
       >
         <slot
           name="item"
           :page="it"
-          :selected="it === props.page"
-          :disabled="props.disabled"
+          :selected="it === page"
+          :disabled="disabled"
           :go="() => goTo(it)"
         >
           {{ it }}
@@ -58,13 +58,13 @@
 
     <component
       :is="slots.next ? 'div' : NeoButton"
-      v-if="!props.hidePrevNext"
+      v-if="!hidePrevNext"
       :disabled="isNextDisabled"
       :extend-on-hover="false"
       class="min-w-9"
-      @click="goTo(props.page + 1)"
+      @click="goTo(page + 1)"
     >
-      <slot name="next" :disabled="isNextDisabled" :go="() => goTo(props.page + 1)">
+      <slot name="next" :disabled="isNextDisabled" :go="() => goTo(page + 1)">
         <ChevronRight class="h-4 w-4" aria-hidden="true" />
         <span class="sr-only">Next</span>
       </slot>
@@ -72,7 +72,7 @@
 
     <component
       :is="slots.last ? 'div' : NeoButton"
-      v-if="!props.hideFirstLast"
+      v-if="!hideFirstLast"
       :disabled="isLastDisabled"
       :extend-on-hover="false"
       class="min-w-9"
@@ -88,7 +88,6 @@
 
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import type { HTMLAttributes } from 'vue'
 import NeoButton from '@/components/atoms/NeoButton/NeoButton.vue'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-vue-next'
 
@@ -103,10 +102,6 @@ export interface NeoPaginationProps {
   hideFirstLast?: boolean
   disabled?: boolean
   ariaLabel?: string
-  role?: string
-  class?: HTMLAttributes['class']
-  size?: NeoSize
-  variant?: 'default' | 'outline'
 }
 
 export interface NeoPaginationEmits {
@@ -114,43 +109,39 @@ export interface NeoPaginationEmits {
   (e: 'change', value: number): void
 }
 
-const props = withDefaults(defineProps<NeoPaginationProps>(), {
-  page: 1,
-  total: 0,
-  perPage: 10,
-  siblingCount: 1,
-  boundaryCount: 1,
-  hidePrevNext: false,
-  hideFirstLast: false,
-  disabled: false,
-  ariaLabel: 'Pagination',
-  role: undefined,
-  class: undefined,
-  size: undefined,
-  variant: 'default',
-})
+const {
+  page = 1,
+  total = 0,
+  perPage = 10,
+  siblingCount = 1,
+  boundaryCount = 1,
+  hidePrevNext = false,
+  hideFirstLast = false,
+  disabled = false,
+  ariaLabel = 'Pagination',
+} = defineProps<NeoPaginationProps>()
 
 const emit = defineEmits<NeoPaginationEmits>()
 const slots = useSlots()
 
 const totalPages = computed(() => {
-  const tp = Math.ceil((props.total ?? 0) / (props.perPage || 1))
+  const tp = Math.ceil((total ?? 0) / (perPage || 1))
   return tp > 0 ? tp : 1
 })
 
 function goTo(p: number) {
-  if (props.disabled) return
+  if (disabled) return
   const next = Math.min(Math.max(1, p), totalPages.value)
-  if (next !== props.page) {
+  if (next !== page) {
     emit('update:page', next)
     emit('change', next)
   }
 }
 
-const isFirstDisabled = computed(() => props.disabled || props.page <= 1)
-const isPrevDisabled = computed(() => props.disabled || props.page <= 1)
-const isNextDisabled = computed(() => props.disabled || props.page >= totalPages.value)
-const isLastDisabled = computed(() => props.disabled || props.page >= totalPages.value)
+const isFirstDisabled = computed(() => disabled || page <= 1)
+const isPrevDisabled = computed(() => disabled || page <= 1)
+const isNextDisabled = computed(() => disabled || page >= totalPages.value)
+const isLastDisabled = computed(() => disabled || page >= totalPages.value)
 
 type PageItem = number | 'ellipsis'
 
@@ -159,9 +150,9 @@ function range(start: number, end: number) {
 }
 
 const items = computed<PageItem[]>(() => {
-  const siblings = props.siblingCount ?? 1
-  const boundaries = props.boundaryCount ?? 1
-  const current = Math.min(Math.max(1, props.page), totalPages.value)
+  const siblings = siblingCount ?? 1
+  const boundaries = boundaryCount ?? 1
+  const current = Math.min(Math.max(1, page), totalPages.value)
   const total = totalPages.value
 
   const startPages = range(1, Math.min(boundaries, total))
@@ -182,11 +173,17 @@ const items = computed<PageItem[]>(() => {
   items.push(...startPages)
 
   if (middle.length) {
-    if (middleStart > boundaries + 1) items.push('ellipsis')
+    if (middleStart > boundaries + 1) {
+      items.push('ellipsis')
+    }
     items.push(...middle)
-    if (middleEnd < total - boundaries) items.push('ellipsis')
+    if (middleEnd < total - boundaries) {
+      items.push('ellipsis')
+    }
   } else {
-    if (boundaries + 1 < total - boundaries) items.push('ellipsis')
+    if (boundaries + 1 < total - boundaries) {
+      items.push('ellipsis')
+    }
   }
 
   endPages.forEach((p) => {

@@ -37,13 +37,7 @@ export interface NeoTabGroupProps {
   selectedTabIndex: number
 }
 
-const props = withDefaults(defineProps<NeoTabGroupProps>(), {
-  selectedTabIndex: 0,
-})
-
-defineEmits<{
-  (e: 'update:selectedTabIndex', value: number): void
-}>()
+const { selectedTabIndex = 0 } = defineProps<NeoTabGroupProps>()
 
 const tablistRef = ref<HTMLElement | null>(null)
 const tablistWidth = ref(0)
@@ -54,22 +48,18 @@ const indicatorVisible = ref(false)
 const indicatorAtStart = ref(false)
 const indicatorAtEnd = ref(false)
 
-/**
- * Update the position and dimensions of the selection indicator
- * based on the currently selected tab
- */
 const updateIndicator = () => {
   if (!tablistRef.value) return
 
   tablistWidth.value = tablistRef.value.offsetWidth
 
   const tabs = Array.from(tablistRef.value.querySelectorAll('[role="tab"]'))
-  if (tabs.length === 0 || props.selectedTabIndex >= tabs.length) {
+  if (tabs.length === 0 || selectedTabIndex >= tabs.length) {
     indicatorVisible.value = false
     return
   }
 
-  const selectedTab = tabs[props.selectedTabIndex] as HTMLElement
+  const selectedTab = tabs[selectedTabIndex] as HTMLElement
   if (!selectedTab) {
     indicatorVisible.value = false
     return
@@ -81,12 +71,12 @@ const updateIndicator = () => {
   indicatorWidth.value = tabRect.width
   indicatorVisible.value = true
 
-  indicatorAtStart.value = props.selectedTabIndex === 0
-  indicatorAtEnd.value = props.selectedTabIndex === tabs.length - 1
+  indicatorAtStart.value = selectedTabIndex === 0
+  indicatorAtEnd.value = selectedTabIndex === tabs.length - 1
 }
 
 watch(
-  () => props.selectedTabIndex,
+  () => selectedTabIndex,
   () => {
     updateIndicator()
   },

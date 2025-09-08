@@ -41,17 +41,13 @@ const delegated = reactiveOmit(props, 'class', 'size')
 const forwarded = useForwardProps(delegated)
 
 const contentWidth = computed(() => {
-  switch (props.size) {
-    case 'sm':
-      return 'w-[20rem]'
-    case 'md':
-      return 'w-[28rem]'
-    case 'lg':
-      return 'w-[36rem]'
-    case 'xl':
-      return 'w-[44rem]'
-    default:
-      return 'w-[28rem]'
+  const sizes = {
+    content: 'w-[28rem]',
+    sm: 'w-[20rem]',
+    md: 'w-[28rem]',
+    lg: 'w-[36rem]',
+    xl: 'w-[44rem]',
   }
+  return sizes[props.size ?? 'md']
 })
 </script>

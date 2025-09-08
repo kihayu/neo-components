@@ -1,13 +1,11 @@
 <template>
-  <div class="flex w-full flex-col gap-y-1.5" :class="props.class">
-    <!-- Optional label/helper text -->
-    <div v-if="props.label" class="font-primary text-sm font-bold text-black">
+  <div class="flex w-full flex-col gap-y-1.5" :class="className">
+    <div v-if="label" class="font-primary text-sm font-bold text-black">
       <label :for="computedId" class="transition-colors duration-300 ease-in-out">
-        {{ props.label }}
+        {{ label }}
       </label>
     </div>
 
-    <!-- Trigger + Dropzone -->
     <div
       ref="dropRef"
       :id="computedId"
@@ -16,11 +14,11 @@
         'font-secondary',
         'focus-visible:outline-primary focus-visible:outline-2',
         dropzoneClasses,
-        { 'cursor-not-allowed opacity-65': props.disabled },
+        { 'cursor-not-allowed opacity-65': disabled },
       ]"
       role="button"
-      :aria-label="props.ariaLabel"
-      :aria-disabled="props.disabled ? 'true' : undefined"
+      :aria-label="ariaLabel"
+      :aria-disabled="disabled ? 'true' : undefined"
       :aria-describedby="describedbyId"
       tabindex="0"
       @click="onTriggerClick"
@@ -38,35 +36,33 @@
             <span class="truncate font-bold">
               {{ triggerText }}
             </span>
-            <span v-if="props.helperText" class="text-utility-darker mt-1 text-xs">
-              {{ props.helperText }}
+            <span v-if="helperText" class="text-utility-darker mt-1 text-xs">
+              {{ helperText }}
             </span>
           </div>
-          <NeoButton :disabled="props.disabled"> Browse… </NeoButton>
+          <NeoButton :disabled="disabled"> Browse… </NeoButton>
         </div>
       </slot>
 
-      <!-- Hidden file input -->
       <input
         ref="inputRef"
         class="sr-only"
         type="file"
         :id="computedId + '-input'"
-        :name="props.name"
-        :accept="props.accept"
-        :multiple="!!props.multiple"
-        :capture="props.capture"
-        :disabled="props.disabled"
+        :name="name"
+        :accept="accept"
+        :multiple="!!multiple"
+        :capture="capture"
+        :disabled="disabled"
+        :required="required"
         @change="onNativeChange"
       />
     </div>
 
-    <!-- Description slot (below trigger) -->
     <div v-if="$slots.description" :id="descId" class="text-utility-darker text-xs">
       <slot name="description" />
     </div>
 
-    <!-- Previews -->
     <div v-if="files.length" class="mt-2">
       <slot name="previews" :files="files">
         <ul class="space-y-1.5">
@@ -84,7 +80,6 @@
       </slot>
     </div>
 
-    <!-- Live region for validation errors -->
     <p v-if="lastError" class="text-error text-xs" role="status" aria-live="polite">
       {{ lastError }}
     </p>
@@ -96,7 +91,6 @@ import { computed, ref, useSlots } from 'vue'
 import type { HTMLAttributes, InputHTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
-// Local types
 export type NeoFileInputErrorCode =
   | 'file-too-large'
   | 'file-too-small'
@@ -137,140 +131,183 @@ export interface NeoFileInputEmits {
   (e: 'blur', ev: FocusEvent): void
 }
 
-const props = withDefaults(defineProps<NeoFileInputProps>(), {
-  id: undefined,
-  name: undefined,
-  accept: undefined,
-  multiple: false,
-  capture: undefined,
-  disabled: false,
-  required: false,
-  modelValue: undefined,
-  maxSize: undefined,
-  minSize: undefined,
-  maxFiles: undefined,
-  ariaLabel: undefined,
-  ariaDescribedby: undefined,
-  role: undefined,
-  class: undefined,
-  label: undefined,
-  helperText: undefined,
-})
-
+const {
+  id = undefined,
+  name = undefined,
+  accept = undefined,
+  multiple = false,
+  capture = undefined,
+  disabled = false,
+  required = false,
+  modelValue = undefined,
+  maxSize = undefined,
+  minSize = undefined,
+  maxFiles = undefined,
+  ariaLabel = undefined,
+  ariaDescribedby = undefined,
+  class: className = undefined,
+  label = undefined,
+  helperText = undefined,
+} = defineProps<NeoFileInputProps>()
 const emit = defineEmits<NeoFileInputEmits>()
 
-/** Internal state */
 const inputRef = ref<HTMLInputElement | null>(null)
 const dropRef = ref<HTMLElement | null>(null)
 const dragging = ref(false)
-const files = ref<File[]>(props.modelValue ?? [])
+const files = ref<File[]>(modelValue ?? [])
 const lastError = ref<string | null>(null)
 
-/** Controlled update helper */
+function parseAccept(accept?: string): AcceptToken[] {
+  if (!accept) return []
+  return accept
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map<AcceptToken>((tok) => {
+      if (tok.startsWith('.')) {
+        return { kind: 'ext', value: tok.slice(1).toLowerCase() }
+      }
+      if (tok.includes('/*')) {
+        return { kind: 'wildcard', type: tok.split('/')[0].toLowerCase() }
+      }
+      const [type, subtype] = tok.split('/')
+      if (type && subtype) {
+        return { kind: 'mime', type: type.toLowerCase(), subtype: subtype.toLowerCase() }
+      }
+      return { kind: 'wildcard', type: '*' }
+    })
+}
+
+function matchesAccept(file: File, list: AcceptToken[]): boolean {
+  const name = file.name.toLowerCase()
+  const ext = name.includes('.') ? name.split('.').pop() || '' : ''
+  const [ftype, fsub] = (file.type || '').toLowerCase().split('/')
+  return list.some((t) => {
+    if (t.kind === 'ext') {
+      return ext === t.value
+    }
+    if (t.kind === 'wildcard') {
+      return t.type === '*' || t.type === ftype
+    }
+    if (t.kind === 'mime') {
+      return t.type === ftype && t.subtype === fsub
+    }
+    return false
+  })
+}
+
 function updateFiles(next: File[], ev?: Event) {
   files.value = next
   emit('update:modelValue', next)
   if (ev) emit('change', next, ev)
 }
 
-/** IDs and ARIA */
 const uid = `neo-fileinput-${Math.random().toString(36).slice(2, 10)}`
-const computedId = computed(() => props.id ?? uid)
+const computedId = computed(() => id ?? uid)
 const slots = useSlots()
 
 const descId = computed(() => (slots.description ? `${computedId.value}-desc` : undefined))
 const describedbyId = computed(() => {
   const ids: string[] = []
-  if (props.ariaDescribedby) ids.push(props.ariaDescribedby)
+  if (ariaDescribedby) ids.push(ariaDescribedby)
   if (descId.value) ids.push(descId.value)
   return ids.length ? ids.join(' ') : undefined
 })
 
-/** Visual classes */
 const dropzoneClasses = computed(() =>
   cn(
     'border-dashed',
     dragging.value ? 'bg-black/5' : 'bg-white',
-    props.disabled ? '' : 'hover:bg-black/5',
+    disabled ? '' : 'hover:bg-black/5',
   ),
 )
 
-/** Trigger helper text */
 const triggerText = computed(() => {
-  const base = props.multiple
+  const base = multiple
     ? 'Drag & drop files here or click to upload'
     : 'Drag & drop a file here or click to upload'
-  return props.accept ? `${base} (${props.accept})` : base
+  return accept ? `${base} (${accept})` : base
 })
 
-/** Native input trigger */
 function onTriggerClick() {
-  if (props.disabled) return
+  if (disabled) {
+    return
+  }
   inputRef.value?.click()
 }
 
 function onTriggerKeydown(ev: KeyboardEvent) {
-  if (props.disabled) return
+  if (disabled) {
+    return
+  }
   if (ev.key === 'Enter' || ev.key === ' ') {
     ev.preventDefault()
     inputRef.value?.click()
   }
 }
 
-/** Drag & Drop handlers */
 function onDragOver() {
-  if (props.disabled) return
+  if (disabled) {
+    return
+  }
   dragging.value = true
 }
 function onDragEnter() {
-  if (props.disabled) return
+  if (disabled) {
+    return
+  }
   dragging.value = true
 }
 function onDragLeave() {
   dragging.value = false
 }
 function onDrop(ev: DragEvent) {
-  if (props.disabled) return
+  if (disabled) {
+    return
+  }
   dragging.value = false
   const dt = ev.dataTransfer
-  if (!dt) return
+  if (!dt) {
+    return
+  }
   const droppedFiles = Array.from(dt.files ?? [])
   handleIncomingFiles(droppedFiles, ev)
 }
 
-/** Native input change */
 function onNativeChange(ev: Event) {
-  if (props.disabled) return
+  if (disabled) {
+    return
+  }
   const target = ev.target as HTMLInputElement
   const picked = Array.from(target.files ?? [])
   handleIncomingFiles(picked, ev)
-  // reset native input so that picking same file again still triggers change
-  if (target) target.value = ''
+
+  if (target) {
+    target.value = ''
+  }
 }
 
-/** Validation + normalization */
 function handleIncomingFiles(incoming: File[], ev?: Event) {
   lastError.value = null
   const { valid, errors } = validateFiles(incoming)
   if (errors.length) {
-    // emit first error as invalid, and each file error via 'error'
     lastError.value = errors[0].message
     emit('invalid', errors[0].message)
     for (const err of errors) emit('error', err)
   }
-  // For single mode, keep only first valid file
-  const next = props.multiple ? valid : valid.slice(0, 1)
-  // Apply maxFiles constraint after valid filtering
+
+  const next = multiple ? valid : valid.slice(0, 1)
+
   let limited = next
-  if (props.multiple && props.maxFiles && next.length > props.maxFiles) {
+  if (multiple && maxFiles && next.length > maxFiles) {
     const err: NeoFileInputError = {
       code: 'too-many-files',
-      message: `Too many files. Maximum allowed is ${props.maxFiles}.`,
+      message: `Too many files. Maximum allowed is ${maxFiles}.`,
     }
     emit('error', err)
     emit('invalid', err.message)
     lastError.value = err.message
-    limited = next.slice(0, props.maxFiles)
+    limited = next.slice(0, maxFiles)
   }
   updateFiles(limited, ev)
 }
@@ -278,19 +315,18 @@ function handleIncomingFiles(incoming: File[], ev?: Event) {
 function validateFiles(candidates: File[]) {
   const errors: NeoFileInputError[] = []
   const valid: File[] = []
-  const acceptList = parseAccept(props.accept)
+  const acceptList = parseAccept(accept)
 
   for (const file of candidates) {
-    // size checks
-    if (props.maxSize && file.size > props.maxSize) {
+    if (maxSize && file.size > maxSize) {
       errors.push({ code: 'file-too-large', message: `${file.name} exceeds maximum size`, file })
       continue
     }
-    if (props.minSize && file.size < props.minSize) {
+    if (minSize && file.size < minSize) {
       errors.push({ code: 'file-too-small', message: `${file.name} is below minimum size`, file })
       continue
     }
-    // type checks
+
     if (acceptList.length && !matchesAccept(file, acceptList)) {
       errors.push({ code: 'invalid-type', message: `${file.name} is not an accepted type`, file })
       continue
@@ -298,69 +334,27 @@ function validateFiles(candidates: File[]) {
     valid.push(file)
   }
 
-  // maxFiles pre-check when user tries to add more than allowed (for multiple only)
-  if (props.multiple && props.maxFiles && valid.length > props.maxFiles) {
+  if (multiple && maxFiles && valid.length > maxFiles) {
     errors.push({
       code: 'too-many-files',
-      message: `Too many files. Maximum allowed is ${props.maxFiles}.`,
+      message: `Too many files. Maximum allowed is ${maxFiles}.`,
     })
   }
 
   return { valid, errors }
 }
 
-/** Accept parsing helpers */
 type AcceptToken =
-  | { kind: 'ext'; value: string } // ".png"
-  | { kind: 'mime'; type: string; subtype: string } // "image/png"
-  | { kind: 'wildcard'; type: string } // "image/*"
-
-function parseAccept(accept?: string | null): AcceptToken[] {
-  if (!accept) return []
-  return accept
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .map((token): AcceptToken | null => {
-      if (token.startsWith('.')) return { kind: 'ext', value: token.toLowerCase() }
-      const parts = token.split('/')
-      if (parts.length === 2) {
-        const [type, subtype] = parts
-        if (subtype === '*') return { kind: 'wildcard', type: type.toLowerCase() }
-        return { kind: 'mime', type: type.toLowerCase(), subtype: subtype.toLowerCase() }
-      }
-      return null
-    })
-    .filter((x): x is AcceptToken => !!x)
-}
-
-function matchesAccept(file: File, tokens: AcceptToken[]): boolean {
-  const lowerName = file.name.toLowerCase()
-  const mime = (file.type || '').toLowerCase()
-  const [type, subtype] = mime.split('/') as [string | undefined, string | undefined]
-
-  for (const t of tokens) {
-    if (t.kind === 'ext') {
-      if (lowerName.endsWith(t.value)) return true
-    } else if (t.kind === 'mime') {
-      if (type === t.type && subtype === t.subtype) return true
-    } else if (t.kind === 'wildcard') {
-      if (type === t.type) return true
-    }
-  }
-  return false
-}
-
-/** Utils */
+  | { kind: 'ext'; value: string }
+  | { kind: 'mime'; type: string; subtype: string }
+  | { kind: 'wildcard'; type: string }
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B'
+  if (bytes === 0) {
+    return '0 B'
+  }
   const k = 1024
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
 }
 </script>
-
-<style scoped>
-/* No motion extras here; use CSS-only transitions, respect reduced motion by default */
-</style>
