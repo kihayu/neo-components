@@ -8,7 +8,7 @@ const meta: Meta<typeof NeoButton> = {
   tags: ['autodocs'],
   argTypes: {
     size: { control: 'select', options: ['medium', 'large'] },
-    type: { control: 'select', options: ['primary', 'error', 'success', 'warning'] },
+    variant: { control: 'select', options: ['primary', 'error', 'success', 'warning'] },
     default: { control: 'text' },
   },
 } satisfies Meta<typeof NeoButton>
@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>
 
 const defaultArgs = {
   size: 'md',
-  type: 'primary',
+  variant: 'primary',
   disabled: false,
   extendedShadow: false,
   default: 'Button',

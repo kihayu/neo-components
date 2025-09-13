@@ -19,7 +19,7 @@
       }"
       :disabled="disabled"
       aria-label="Button"
-      :class="buttonClasses({ size, type })"
+      :class="buttonClasses({ size, type: variant })"
     >
       <slot />
     </motion.button>
@@ -36,11 +36,11 @@ import { motion } from 'motion-v'
 import { computed } from 'vue'
 
 type ButtonSize = 'sm' | 'md' | 'lg'
-type ButtonType = 'primary' | 'error' | 'success' | 'warning'
+type ButtonVariant = 'primary' | 'error' | 'success' | 'warning'
 
 export interface NeoButtonProps {
   size?: ButtonSize
-  type?: ButtonType
+  variant?: ButtonVariant
   disabled?: boolean
   extendedShadow?: boolean
   extendOnHover?: boolean
@@ -48,7 +48,7 @@ export interface NeoButtonProps {
 
 const {
   size = 'md',
-  type = 'primary',
+  variant = 'primary',
   disabled = false,
   extendedShadow = false,
   extendOnHover = true,
