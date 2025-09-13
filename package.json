@@ -24,7 +24,8 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/neo-components.es.js",
       "require": "./dist/neo-components.cjs.js"
-    }
+    },
+    "./neo-components.css": "./dist/neo-components.css"
   },
   "files": [
     "dist",

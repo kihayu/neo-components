@@ -65,7 +65,7 @@ export const Default: Story = {
   render: (args) => ({
     components: { NeoCheckboxGroup },
     setup() {
-      const selectedValues = ref([...args.modelValue])
+      const selectedValues = ref([...(args.modelValue ?? [])])
       return {
         args,
         selectedValues,
@@ -93,7 +93,7 @@ export const Horizontal: Story = {
   render: (args) => ({
     components: { NeoCheckboxGroup },
     setup() {
-      const selectedValues = ref([...args.modelValue])
+      const selectedValues = ref([...(args.modelValue ?? [])])
       return {
         args,
         selectedValues,
@@ -149,7 +149,7 @@ export const AllDisabled: Story = {
   render: (args) => ({
     components: { NeoCheckboxGroup },
     setup() {
-      const selectedValues = ref([...args.modelValue])
+      const selectedValues = ref([...(args.modelValue ?? [])])
       return {
         args,
         selectedValues,
