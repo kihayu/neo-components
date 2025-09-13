@@ -18,7 +18,7 @@
     <ul
       ref="listRef"
       :id="listboxId"
-      class="neo-select-list absolute max-h-52 max-w-full overflow-y-auto rounded-b-xl border-x-4 border-b-4 opacity-0 transition-[opacity,transform,visibility] duration-200 ease-in-out"
+      class="neo-select-list absolute z-50 max-h-52 max-w-full overflow-y-auto rounded-b-xl border-x-4 border-b-4 opacity-0 transition-[opacity,transform,visibility] duration-200 ease-in-out"
       :style="{
         width: dropdownWidth + 'px',
         transform: selectOpen ? 'translateY(0)' : 'translateY(-10px)',
