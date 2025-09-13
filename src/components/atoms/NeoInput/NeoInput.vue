@@ -1,7 +1,7 @@
 <template>
   <motion.input
     :id="id"
-    class="font-secondary placeholder:text-utility-darker focus:border-primary disabled:border-utility-dark w-full rounded-xl border-4 bg-white px-3 py-2.5 font-bold transition-all duration-300 ease-in-out placeholder:font-bold focus:outline-none focus-visible:outline-none active:scale-none disabled:placeholder:opacity-65 disabled:hover:cursor-not-allowed"
+    class="font-secondary placeholder:text-utility-darker focus-visible:outline-primary w-full rounded-xl border-4 border-black bg-white px-3 py-2.5 font-bold transition-all duration-300 ease-in-out placeholder:font-bold focus-visible:outline-2 active:scale-none disabled:placeholder:opacity-65 disabled:hover:cursor-not-allowed"
     :type="type"
     v-model="model"
     :while-focus="scaleOnFocus ? { scale: 0.95 } : {}"
@@ -47,12 +47,13 @@ export interface NeoInputProps {
   type?: HTMLInputType
 }
 
-withDefaults(defineProps<NeoInputProps>(), {
-  placeholder: '',
-  disabled: false,
-  scaleOnFocus: true,
-  type: 'text',
-})
+const {
+  id,
+  placeholder = '',
+  disabled = false,
+  scaleOnFocus = true,
+  type = 'text',
+} = defineProps<NeoInputProps>()
 
 const model = defineModel<string>()
 

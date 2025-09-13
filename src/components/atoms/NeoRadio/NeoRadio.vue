@@ -61,13 +61,15 @@ export interface NeoRadioProps<T = string | number | boolean> {
   disabled?: boolean
 }
 
-const props = withDefaults(defineProps<NeoRadioProps<string | number | boolean>>(), {
-  id: '',
-  name: '',
-  disabled: false,
-})
+const {
+  id = '',
+  name = '',
+  disabled = false,
+  modelValue,
+  value,
+} = defineProps<NeoRadioProps<string | number | boolean>>()
 
-const isChecked = computed(() => props.modelValue === props.value)
+const isChecked = computed(() => modelValue === value)
 
 interface NeoRadioEmits<T = string | number | boolean> {
   (event: 'update:modelValue', value: T): void
@@ -76,8 +78,8 @@ interface NeoRadioEmits<T = string | number | boolean> {
 const emit = defineEmits<NeoRadioEmits<string | number | boolean>>()
 
 const onInput = () => {
-  if (!props.disabled) {
-    emit('update:modelValue', props.value)
+  if (!disabled) {
+    emit('update:modelValue', value)
   }
 }
 </script>

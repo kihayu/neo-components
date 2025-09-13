@@ -165,8 +165,8 @@ export const WithActions: Story = {
         </template>
         <template #actions>
           <div class="flex gap-4">
-            <NeoButton size="medium" type="primary">Update Now</NeoButton>
-            <NeoButton size="medium" type="error">Remind Later</NeoButton>
+            <NeoButton size="md" type="primary">Update Now</NeoButton>
+            <NeoButton size="md" type="error">Remind Later</NeoButton>
           </div>
         </template>
       </NeoAlert>

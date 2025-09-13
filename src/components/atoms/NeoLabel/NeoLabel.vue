@@ -9,5 +9,5 @@ export interface NeoLabelProps {
   forId: string
 }
 
-defineProps<NeoLabelProps>()
+const { forId } = defineProps<NeoLabelProps>()
 </script>

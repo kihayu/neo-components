@@ -5,14 +5,9 @@
       :class="{ '-translate-x-1 -translate-y-1.5': shadow }"
     >
       <div v-if="dismissible" class="absolute top-2 right-2 z-20">
-        <button
-          type="button"
-          class="flex rounded-md p-1.5 hover:bg-black/10 focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          @click="emit('close')"
-          aria-label="Dismiss"
-        >
+        <NeoButton @click="emit('close')" aria-label="Dismiss">
           <X class="h-5 w-5" />
-        </button>
+        </NeoButton>
       </div>
       <div
         v-if="$slots.header"
@@ -38,16 +33,14 @@
 <script setup lang="ts">
 import { motion } from 'motion-v'
 import { X } from 'lucide-vue-next'
+import NeoButton from '@/components/atoms/NeoButton/NeoButton.vue'
 
 export interface NeoCardProps {
   shadow?: boolean
   dismissible?: boolean
 }
 
-withDefaults(defineProps<NeoCardProps>(), {
-  shadow: false,
-  dismissible: false,
-})
+const { shadow = false, dismissible = false } = defineProps<NeoCardProps>()
 
 interface NeoCardEmits {
   (event: 'close'): void

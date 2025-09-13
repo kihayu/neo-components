@@ -14,7 +14,7 @@
     >
       {{ slotText }}
     </NeoSelect>
-    <!-- Always keep the list in DOM for accessibility, but hide it visually when closed -->
+
     <ul
       ref="listRef"
       :id="listboxId"
@@ -51,8 +51,7 @@ export interface NeoLabeledSelectProps {
   options: Array<string>
 }
 
-const props = defineProps<NeoLabeledSelectProps>()
-
+const { id } = defineProps<NeoLabeledSelectProps>()
 const selectRef = ref<InstanceType<typeof NeoSelect> | null>(null)
 const dropdownWidth = ref(0)
 
@@ -71,7 +70,7 @@ const slots = useSlots()
 const labelText = ref('')
 const slotText = ref('')
 const originText = ref('')
-const listboxId = computed(() => `${props.id}-listbox`)
+const listboxId = computed(() => `${id}-listbox`)
 
 const selectOption = (option: string) => {
   model.value = option

@@ -47,13 +47,16 @@ export interface NeoCheckboxGroupProps<T = string | number> {
   orientation?: 'horizontal' | 'vertical'
 }
 
-const props = withDefaults(defineProps<NeoCheckboxGroupProps<string | number>>(), {
-  disabled: false,
-  required: false,
-  orientation: 'vertical',
-  legend: '',
-  helperText: '',
-})
+const {
+  modelValue,
+  options,
+  name,
+  disabled = false,
+  required = false,
+  orientation = 'vertical',
+  legend = '',
+  helperText = '',
+} = defineProps<NeoCheckboxGroupProps<string | number>>()
 
 interface NeoCheckboxGroupEmits<T = string | number> {
   (e: 'update:modelValue', value: T[]): void
@@ -62,11 +65,11 @@ interface NeoCheckboxGroupEmits<T = string | number> {
 const emit = defineEmits<NeoCheckboxGroupEmits<string | number>>()
 
 const isSelected = <T extends string | number>(value: T): boolean => {
-  return props.modelValue.includes(value)
+  return modelValue.includes(value)
 }
 
 const updateValue = <T extends string | number>(value: T, checked: boolean) => {
-  const newValue = [...props.modelValue]
+  const newValue = [...modelValue]
 
   if (checked && !newValue.includes(value)) {
     newValue.push(value)

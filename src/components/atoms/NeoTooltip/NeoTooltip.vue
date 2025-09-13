@@ -50,12 +50,12 @@ export interface NeoTooltipProps {
   showDelay?: number
 }
 
-const props = withDefaults(defineProps<NeoTooltipProps>(), {
-  text: '',
-  position: 'top',
-  offsetDistance: 8,
-  showDelay: 200,
-})
+const {
+  text = '',
+  position = 'top',
+  offsetDistance = 8,
+  showDelay = 200,
+} = defineProps<NeoTooltipProps>()
 
 const isVisible = ref(false)
 const triggerRef = ref<HTMLElement | null>(null)
@@ -71,7 +71,7 @@ const positionClass = computed(() => {
     right: 'transform origin-left',
     bottom: 'transform origin-top',
     left: 'transform origin-right',
-  }[props.position]
+  }[position]
 })
 
 const showTooltip = () => {
@@ -82,7 +82,7 @@ const showTooltip = () => {
   showTimeout = setTimeout(() => {
     isVisible.value = true
     setTimeout(updatePosition, 0)
-  }, props.showDelay)
+  }, showDelay)
 }
 
 const hideTooltip = () => {
@@ -102,12 +102,12 @@ const updatePosition = () => {
   const windowWidth = window.innerWidth
   const windowHeight = window.innerHeight
 
-  const gap = props.offsetDistance
+  const gap = offsetDistance
 
   let top = 0
   let left = 0
 
-  switch (props.position) {
+  switch (position) {
     case 'top':
       top = triggerRect.top - tooltipRect.height - gap
       left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2

@@ -17,7 +17,7 @@
         :model-value="modelValue"
         :value="option.value"
         :disabled="disabled || option.disabled"
-        @update:model-value="(value: unknown) => updateValue(value)"
+        @update:model-value="(value: string | number | boolean) => updateValue(value)"
       >
         {{ option.label }}
       </NeoRadio>
@@ -49,13 +49,16 @@ export interface NeoRadioGroupProps<T = string | number | boolean> {
   orientation?: 'horizontal' | 'vertical'
 }
 
-withDefaults(defineProps<NeoRadioGroupProps<string | number | boolean>>(), {
-  disabled: false,
-  required: false,
-  orientation: 'vertical',
-  legend: '',
-  helperText: '',
-})
+const {
+  modelValue,
+  options,
+  name,
+  disabled = false,
+  required = false,
+  orientation = 'vertical',
+  legend = '',
+  helperText = '',
+} = defineProps<NeoRadioGroupProps<string | number | boolean>>()
 
 interface NeoRadioGroupEmits<T = string | number | boolean> {
   (e: 'update:modelValue', value: T): void

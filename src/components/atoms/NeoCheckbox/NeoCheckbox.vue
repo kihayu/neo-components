@@ -50,11 +50,7 @@ export interface NeoCheckboxProps {
   disabled?: boolean
 }
 
-withDefaults(defineProps<NeoCheckboxProps>(), {
-  id: '',
-  modelValue: false,
-  disabled: false,
-})
+const { id = '', modelValue = false, disabled = false } = defineProps<NeoCheckboxProps>()
 
 interface NeoCheckboxEmits {
   (event: 'update:modelValue', value: boolean): void

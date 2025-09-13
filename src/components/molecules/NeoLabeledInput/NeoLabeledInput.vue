@@ -38,11 +38,12 @@ export interface NeoLabeledInputProps {
   layout?: Layout
 }
 
-withDefaults(defineProps<NeoLabeledInputProps>(), {
-  placeholder: '',
-  disabled: false,
-  layout: 'vertical',
-})
+const {
+  id = '',
+  placeholder = '',
+  disabled = false,
+  layout = 'vertical',
+} = defineProps<NeoLabeledInputProps>()
 
 const inFocus = ref(false)
 </script>

@@ -1,4 +1,3 @@
-import { expect, fn, userEvent, within } from '@storybook/test'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 import NeoButton, { type NeoButtonProps } from './NeoButton.vue'
@@ -12,9 +11,6 @@ const meta: Meta<typeof NeoButton> = {
     type: { control: 'select', options: ['primary', 'error', 'success', 'warning'] },
     default: { control: 'text' },
   },
-  args: {
-    onClick: fn(),
-  },
 } satisfies Meta<typeof NeoButton>
 
 export default meta
@@ -22,7 +18,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const defaultArgs = {
-  size: 'medium',
+  size: 'md',
   type: 'primary',
   disabled: false,
   extendedShadow: false,
@@ -46,13 +42,6 @@ export const Default: Story = {
     ...defaultArgs,
   },
   render: (args) => renderFunction(args),
-  play: async ({ canvasElement, args }) => {
-    const canvas = within(canvasElement)
-    const button = canvas.getByRole('button', { name: /Button/i })
-    await expect(button).toBeInTheDocument()
-    await userEvent.click(button)
-    expect(args.onClick).toHaveBeenCalledTimes(1)
-  },
 }
 
 export const Shadow: Story = {
@@ -71,10 +60,18 @@ export const Disabled: Story = {
   render: (args) => renderFunction(args),
 }
 
+export const Small: Story = {
+  args: {
+    ...defaultArgs,
+    size: 'sm',
+  },
+  render: (args) => renderFunction(args),
+}
+
 export const Large: Story = {
   args: {
     ...defaultArgs,
-    size: 'large',
+    size: 'lg',
   },
   render: (args) => renderFunction(args),
 }

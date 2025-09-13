@@ -38,14 +38,9 @@
         </div>
       </div>
       <div v-if="dismissible" class="flex-shrink-0">
-        <button
-          type="button"
-          class="flex rounded-md p-1.5 hover:bg-black/10 focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          @click="dismiss"
-          aria-label="Dismiss"
-        >
+        <NeoButton @click="dismiss" aria-label="Dismiss">
           <X class="h-5 w-5" />
-        </button>
+        </NeoButton>
       </div>
     </motion.div>
   </div>
@@ -69,23 +64,23 @@ export interface NeoAlertProps {
   autoCloseDelay?: number
 }
 
-const props = withDefaults(defineProps<NeoAlertProps>(), {
-  show: true,
-  type: 'info',
-  title: '',
-  message: '',
-  dismissible: false,
-  showIcon: true,
-  autoClose: false,
-  autoCloseDelay: 5000,
-})
-
+const {
+  show = true,
+  type = 'info',
+  title = '',
+  message = '',
+  dismissible = false,
+  showIcon = true,
+  autoClose = false,
+  autoCloseDelay = 5000,
+} = defineProps<NeoAlertProps>()
 interface NeoAlertEmits {
   (event: 'dismiss'): void
   (event: 'close'): void
 }
 
 const emit = defineEmits<NeoAlertEmits>()
+
 let autoCloseTimeout: ReturnType<typeof setTimeout> | null = null
 
 const backgroundClass = computed(() => {
@@ -96,7 +91,7 @@ const backgroundClass = computed(() => {
     error: 'bg-red-50 text-red-800',
   }
 
-  return backgrounds[props.type]
+  return backgrounds[type]
 })
 
 const iconComponent = computed(() => {
@@ -107,7 +102,7 @@ const iconComponent = computed(() => {
     error: XCircle,
   }
 
-  return icons[props.type]
+  return icons[type]
 })
 
 const dismiss = () => {
@@ -118,9 +113,9 @@ const dismiss = () => {
   }
 }
 
-if (props.autoClose && props.show) {
+if (autoClose && show) {
   autoCloseTimeout = setTimeout(() => {
     dismiss()
-  }, props.autoCloseDelay)
+  }, autoCloseDelay)
 }
 </script>

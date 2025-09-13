@@ -39,9 +39,5 @@ export interface NeoDividerProps {
   tight?: boolean
 }
 
-withDefaults(defineProps<NeoDividerProps>(), {
-  orientation: 'horizontal',
-  label: '',
-  tight: false,
-})
+const { orientation = 'horizontal', label = '', tight = false } = defineProps<NeoDividerProps>()
 </script>

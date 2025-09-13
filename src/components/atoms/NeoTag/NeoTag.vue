@@ -48,13 +48,13 @@ export interface NeoTagProps {
   ariaLabel?: string
 }
 
-const props = withDefaults(defineProps<NeoTagProps>(), {
-  type: 'primary',
-  size: 'md',
-  label: '',
-  dismissible: false,
-  ariaLabel: 'Tag',
-})
+const {
+  type = 'primary',
+  size = 'md',
+  label = '',
+  dismissible = false,
+  ariaLabel = 'Tag',
+} = defineProps<NeoTagProps>()
 
 interface NeoTagEmits {
   (event: 'dismiss'): void
@@ -70,7 +70,7 @@ const typeClasses = computed(() => {
     warning: 'bg-warning text-white',
     info: 'bg-primary-light text-white',
   }
-  return types[props.type]
+  return types[type]
 })
 
 const sizeClasses = computed(() => {
@@ -79,7 +79,7 @@ const sizeClasses = computed(() => {
     md: 'text-sm',
     lg: 'text-base',
   }
-  return sizes[props.size]
+  return sizes[size]
 })
 
 const onDismiss = () => {

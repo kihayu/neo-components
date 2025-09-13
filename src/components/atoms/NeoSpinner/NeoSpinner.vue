@@ -38,11 +38,7 @@ export interface NeoSpinnerProps {
   ariaLabel?: string
 }
 
-const props = withDefaults(defineProps<NeoSpinnerProps>(), {
-  size: 'md',
-  label: '',
-  ariaLabel: 'Loading',
-})
+const { size = 'md', label = '', ariaLabel = 'Loading' } = defineProps<NeoSpinnerProps>()
 
 const spinnerSize = computed(() => {
   const sizes = {
@@ -51,7 +47,7 @@ const spinnerSize = computed(() => {
     lg: '48',
   }
 
-  return sizes[props.size]
+  return sizes[size]
 })
 
 const animationClass = computed(() => {

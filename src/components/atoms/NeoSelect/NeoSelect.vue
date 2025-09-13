@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { ChevronDown } from 'lucide-vue-next'
 
 export interface NeoSelectProps {
@@ -37,15 +37,9 @@ export interface NeoSelectProps {
   listId?: string
 }
 
-const props = withDefaults(defineProps<NeoSelectProps>(), {
-  id: '',
-  label: '',
-  open: false,
-})
+const { id, label, open = false, listId = '' } = defineProps<NeoSelectProps>()
 
-const listId = computed(() => props.listId || `${props.id}-list`)
-
-const selectOpen = ref(props.open)
+const selectOpen = ref(open)
 
 const onClick = () => {
   selectOpen.value = !selectOpen.value
@@ -57,9 +51,9 @@ interface NeoSelectEmits {
 const emit = defineEmits<NeoSelectEmits>()
 
 watch(
-  () => props.open,
+  () => open,
   () => {
-    selectOpen.value = props.open
+    selectOpen.value = open
   },
 )
 

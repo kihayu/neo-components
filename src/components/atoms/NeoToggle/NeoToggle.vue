@@ -49,12 +49,12 @@ export interface NeoToggleProps {
   ariaLabel?: string
 }
 
-const props = withDefaults(defineProps<NeoToggleProps>(), {
-  id: '',
-  modelValue: false,
-  disabled: false,
-  ariaLabel: 'Toggle switch',
-})
+const {
+  id = '',
+  modelValue = false,
+  disabled = false,
+  ariaLabel = 'Toggle switch',
+} = defineProps<NeoToggleProps>()
 
 interface NeoToggleEmits {
   (event: 'update:modelValue', value: boolean): void
@@ -63,7 +63,7 @@ interface NeoToggleEmits {
 const emit = defineEmits<NeoToggleEmits>()
 
 const onInput = (event: Event) => {
-  if (!props.disabled) {
+  if (!disabled) {
     const target = event.target as HTMLInputElement
     emit('update:modelValue', target.checked)
   }

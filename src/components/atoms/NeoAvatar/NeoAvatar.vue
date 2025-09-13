@@ -20,9 +20,9 @@
       :tabindex="interactive ? 0 : undefined"
       :role="interactive ? 'button' : 'img'"
       :aria-label="ariaLabel"
-      @click="interactive ? $emit('click') : undefined"
-      @keydown.enter="interactive ? $emit('click') : undefined"
-      @keydown.space="interactive ? $emit('click') : undefined"
+      @click="interactive ? emit('click') : undefined"
+      @keydown.enter="interactive ? emit('click') : undefined"
+      @keydown.space="interactive ? emit('click') : undefined"
     >
       <img
         v-if="src && !error"
@@ -60,20 +60,22 @@ export interface NeoAvatarProps {
   ariaLabel?: string
 }
 
-const props = withDefaults(defineProps<NeoAvatarProps>(), {
-  size: 'md',
-  shape: 'circle',
-  color: 'primary',
-  src: '',
-  alt: 'User avatar',
-  initials: '',
-  interactive: false,
-  ariaLabel: 'User avatar',
-})
-
-defineEmits<{
+interface NeoAvatarEmits {
   (e: 'click'): void
-}>()
+}
+
+const {
+  size = 'md',
+  shape = 'circle',
+  color = 'primary',
+  src = '',
+  alt = 'User avatar',
+  initials = '',
+  interactive = false,
+  ariaLabel = 'User avatar',
+} = defineProps<NeoAvatarProps>()
+
+const emit = defineEmits<NeoAvatarEmits>()
 
 const error = ref(false)
 
@@ -89,7 +91,7 @@ const sizeClasses = computed(() => {
     lg: 'h-16 w-16 text-lg',
     xl: 'h-20 w-20 text-xl',
   }
-  return sizes[props.size]
+  return sizes[size]
 })
 
 const roundedClasses = computed(() => {
@@ -98,7 +100,7 @@ const roundedClasses = computed(() => {
     square: 'rounded-none',
     rounded: 'rounded-xl',
   }
-  return shapes[props.shape]
+  return shapes[shape]
 })
 
 const backgroundClass = computed(() => {
@@ -110,45 +112,25 @@ const backgroundClass = computed(() => {
     info: 'bg-primary-light',
     gray: 'bg-gray-500',
   }
-  return colors[props.color]
+  return colors[color]
 })
 
 const hoverAttributes = computed(() => {
-  if (!props.interactive) {
+  if (!interactive) {
     return {}
   }
 
-  let x = 0
-  let y = 0
-
-  switch (props.size) {
-    case 'xs':
-      x = 2
-      y = 3
-      break
-    case 'sm':
-      x = 3
-      y = 4
-      break
-    case 'md':
-      x = 4
-      y = 4
-      break
-    case 'lg':
-      x = 5
-      y = 6
-      break
-    case 'xl':
-      x = 6
-      y = 8
-      break
-    default:
-      break
+  const sizes = {
+    xs: { x: 2, y: 3 },
+    sm: { x: 3, y: 4 },
+    md: { x: 4, y: 4 },
+    lg: { x: 5, y: 6 },
+    xl: { x: 6, y: 8 },
   }
 
   return {
-    x: -x,
-    y: -y,
+    x: -sizes[size].x,
+    y: -sizes[size].y,
   }
 })
 </script>
