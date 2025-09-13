@@ -28,7 +28,7 @@ export const Default: Story = {
     step: 1,
     size: 'md',
     orientation: 'horizontal',
-    showValueLabel: true,
+    showValueLabel: false,
   },
   render: (args: Record<string, unknown>) => ({
     components: { NeoSlider },
@@ -53,7 +53,7 @@ export const Range: Story = {
     step: 1,
     size: 'md',
     orientation: 'horizontal',
-    showValueLabel: true,
+    showValueLabel: false,
   },
   render: (args: Record<string, unknown>) => ({
     components: { NeoSlider },

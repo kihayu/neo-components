@@ -1,5 +1,12 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-export { default as NeoTable } from '@/components/ui/table/NeoTable.vue'
+export { default as NeoTable } from './NeoTable.vue'
+export type {
+  TableSortDirection,
+  TableColumn,
+  TableRowMeta,
+  NeoTableProps,
+  NeoTableEmits,
+} from './NeoTable.vue'
 
 /**
  * Table style variants: density, borders, striping

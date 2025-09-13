@@ -43,39 +43,17 @@
                 >
                   <span class="truncate">{{ col.header }}</span>
                   <span v-if="col.sortable" aria-hidden="true" class="inline-block">
-                    <svg
+                    <ChevronUp
                       v-if="isSorted(col) && currentSortDirection === 'asc'"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="14"
-                      height="14"
-                      fill="currentColor"
+                      :size="14"
                       class="translate-y-[1px]"
-                    >
-                      <path d="M7 14l5-5 5 5z" />
-                    </svg>
-                    <svg
+                    />
+                    <ChevronDown
                       v-else-if="isSorted(col) && currentSortDirection === 'desc'"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="14"
-                      height="14"
-                      fill="currentColor"
+                      :size="14"
                       class="-translate-y-[1px]"
-                    >
-                      <path d="M7 10l5 5 5-5z" />
-                    </svg>
-                    <svg
-                      v-else
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="14"
-                      height="14"
-                      fill="currentColor"
-                      class="opacity-40"
-                    >
-                      <path d="M7 10l5 5 5-5z" />
-                    </svg>
+                    />
+                    <ChevronDown v-else :size="14" class="opacity-40" />
                   </span>
                 </button>
               </th>
@@ -164,6 +142,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { tableVariants, type TableVariants } from '.'
 import type { HTMLAttributes } from 'vue'
+import { ChevronDown, ChevronUp } from 'lucide-vue-next'
 
 export type TableSortDirection = 'asc' | 'desc' | null
 
@@ -306,8 +285,12 @@ const currentSortDirection = computed<Exclude<TableSortDirection, null> | undefi
 
 function isSorted(col: TableColumn<Row>) {
   const ck = currentSortKey.value
-  if (!ck) return false
-  if (typeof ck === 'function') return true
+  if (!ck) {
+    return false
+  }
+  if (typeof ck === 'function') {
+    return true
+  }
   const keyForCol = col.sortKey ?? col.key
   return ck === keyForCol
 }
@@ -323,7 +306,9 @@ function toggleDirection(dir: Exclude<TableSortDirection, null>) {
 
 function onHeaderClick(col: TableColumn<Row>, ev: MouseEvent) {
   emit('headerClick', col, ev)
-  if (!col.sortable) return
+  if (!col.sortable) {
+    return
+  }
 
   let nextKey: NonNullable<typeof internalSortKey.value>
   if (typeof currentSortKey.value === 'function') {
@@ -334,8 +319,11 @@ function onHeaderClick(col: TableColumn<Row>, ev: MouseEvent) {
   }
 
   let nextDir: Exclude<TableSortDirection, null>
-  if (!isSorted(col) || !currentSortDirection.value) nextDir = 'asc'
-  else nextDir = toggleDirection(currentSortDirection.value)
+  if (!isSorted(col) || !currentSortDirection.value) {
+    nextDir = 'asc'
+  } else {
+    nextDir = toggleDirection(currentSortDirection.value)
+  }
 
   internalSortKey.value = nextKey
   internalSortDirection.value = nextDir
@@ -346,7 +334,9 @@ function onHeaderClick(col: TableColumn<Row>, ev: MouseEvent) {
 
 function rowKey(row: Row, index: number) {
   const kf = keyField
-  if (typeof kf === 'function') return (kf as (row: Row) => string | number)(row)
+  if (typeof kf === 'function') {
+    return (kf as (row: Row) => string | number)(row)
+  }
   if (typeof kf === 'string') {
     const key = row[kf as keyof Row]
     return typeof key === 'string' || typeof key === 'number' ? key : index
@@ -358,7 +348,9 @@ const rowsSorted = computed<Row[]>(() => {
   const dataArr = (rowsData ?? []) as Row[]
   const ck = currentSortKey.value
   const dir = currentSortDirection.value
-  if (!ck || !dir) return dataArr
+  if (!ck || !dir) {
+    return dataArr
+  }
 
   if (typeof ck === 'function') {
     const sorted = [...dataArr].sort(ck)
@@ -367,18 +359,29 @@ const rowsSorted = computed<Row[]>(() => {
 
   const col = columnsNormalized.value.find((c) => (c.sortKey ?? c.key) === ck)
   const getVal = (row: Row): unknown => {
-    if (col?.accessor) return col.accessor(row as Row)
-    if (typeof ck === 'string')
+    if (col?.accessor) {
+      return col.accessor(row as Row)
+    }
+    if (typeof ck === 'string') {
       return (row[ck as keyof Row] ?? row[col?.key as keyof Row]) as unknown
+    }
     return row[col?.key as keyof Row] as unknown
   }
-  const sorted = [...dataArr].sort((a, b) => {
+  const sorted = [...dataArr].sort((a: Row, b: Row) => {
     const va = getVal(a)
     const vb = getVal(b)
-    if (va == null && vb == null) return 0
-    if (va == null) return -1
-    if (vb == null) return 1
-    if (typeof va === 'number' && typeof vb === 'number') return va - vb
+    if (va == null && vb == null) {
+      return 0
+    }
+    if (va == null) {
+      return -1
+    }
+    if (vb == null) {
+      return 1
+    }
+    if (typeof va === 'number' && typeof vb === 'number') {
+      return va - vb
+    }
     return String(va).localeCompare(String(vb))
   })
   return dir === 'asc' ? sorted : sorted.reverse()
@@ -438,14 +441,18 @@ function toggleRowSelection(row: Row, ri: number) {
   const key = rowKey(row, ri)
   const next = new Set(internalSelected.value)
   if (selectionMode === 'single') {
-    if (next.has(key)) next.clear()
-    else {
+    if (next.has(key)) {
+      next.clear()
+    } else {
       next.clear()
       next.add(key)
     }
   } else {
-    if (next.has(key)) next.delete(key)
-    else next.add(key)
+    if (next.has(key)) {
+      next.delete(key)
+    } else {
+      next.add(key)
+    }
   }
   setSelectedKeys(Array.from(next))
 }

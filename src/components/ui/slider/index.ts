@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-export { default as NeoSlider } from '@/components/ui/slider/NeoSlider.vue'
+export { default as NeoSlider } from './NeoSlider.vue'
+export type * from './NeoSlider.vue'
 
 export const sliderVariants = cva('relative flex select-none touch-none items-center', {
   variants: {

@@ -1,11 +1,11 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
-export { default as NeoDrawer } from '@/components/ui/sheet/NeoDrawer.vue'
-export { default as NeoDrawerTrigger } from '@/components/ui/sheet/NeoDrawerTrigger.vue'
-export { default as NeoDrawerContent } from '@/components/ui/sheet/NeoDrawerContent.vue'
-export { default as NeoDrawerTitle } from '@/components/ui/sheet/NeoDrawerTitle.vue'
-export { default as NeoDrawerDescription } from '@/components/ui/sheet/NeoDrawerDescription.vue'
-export { default as NeoDrawerClose } from '@/components/ui/sheet/NeoDrawerClose.vue'
+export { default as NeoDrawer } from './NeoDrawer.vue'
+export { default as NeoDrawerTrigger } from './NeoDrawerTrigger.vue'
+export { default as NeoDrawerContent } from './NeoDrawerContent.vue'
+export { default as NeoDrawerTitle } from './NeoDrawerTitle.vue'
+export { default as NeoDrawerDescription } from './NeoDrawerDescription.vue'
+export { default as NeoDrawerClose } from './NeoDrawerClose.vue'
 
 /**
  * Drawer (Sheet) content size variants (width for left/right, height for top/bottom)

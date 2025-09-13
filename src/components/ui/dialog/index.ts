@@ -1,11 +1,11 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
-export { default as NeoDialog } from '@/components/ui/dialog/NeoDialog.vue'
-export { default as NeoDialogTrigger } from '@/components/ui/dialog/NeoDialogTrigger.vue'
-export { default as NeoDialogContent } from '@/components/ui/dialog/NeoDialogContent.vue'
-export { default as NeoDialogTitle } from '@/components/ui/dialog/NeoDialogTitle.vue'
-export { default as NeoDialogDescription } from '@/components/ui/dialog/NeoDialogDescription.vue'
-export { default as NeoDialogClose } from '@/components/ui/dialog/NeoDialogClose.vue'
+export { default as NeoDialog } from './NeoDialog.vue'
+export { default as NeoDialogTrigger } from './NeoDialogTrigger.vue'
+export { default as NeoDialogContent } from './NeoDialogContent.vue'
+export { default as NeoDialogTitle } from './NeoDialogTitle.vue'
+export { default as NeoDialogDescription } from './NeoDialogDescription.vue'
+export { default as NeoDialogClose } from './NeoDialogClose.vue'
 
 /**
  * Dialog content size variants

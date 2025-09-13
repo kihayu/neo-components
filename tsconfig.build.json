@@ -1,0 +1,33 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "env.d.ts",
+    "src/index.ts",
+    "src/plugin.ts",
+    "src/lib/**/*.ts",
+    "src/components/**/*.ts",
+    "src/components/**/*.vue"
+  ],
+  "exclude": [
+    "src/**/__tests__/*",
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx",
+    "src/**/*.stories.mdx",
+    "src/App.vue",
+    "src/main.ts",
+    "src/**/*.stories.*"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "noEmit": false,
+    "strict": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./dist/types",
+    "stripInternal": false,
+    "jsx": "preserve"
+  }
+}

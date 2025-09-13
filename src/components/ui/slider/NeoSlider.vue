@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div :class="{ 'w-full': orientation === 'horizontal' }">
     <SliderRoot
       v-model="model"
       :min="min"
@@ -8,8 +8,8 @@
       :orientation="orientation"
       :disabled="disabled"
       :name="name"
-      class="relative flex w-full items-center"
-      :class="orientation === 'vertical' ? 'h-44 flex-col' : 'h-10'"
+      class="relative flex w-fit items-center"
+      :class="orientation === 'vertical' ? 'h-44 flex-col' : 'h-10 w-full'"
       @pointerup="onCommit"
       @touchend="onCommit"
       @keyup.enter.prevent="onCommit"
@@ -26,7 +26,7 @@
       <SliderThumb
         v-for="(_, i) in model"
         :key="i"
-        class="focus-visible:outline-primary block rounded-full border-4 border-black bg-white shadow transition-colors focus-visible:outline-2"
+        class="focus-visible:outline-primary block cursor-grab rounded-full border-4 border-black bg-white shadow transition-colors focus-visible:outline-2 active:cursor-grabbing"
         :class="thumbSize"
         :aria-label="thumbAriaLabel(i)"
         @keydown.enter.prevent="onCommit()"
@@ -34,9 +34,9 @@
       />
     </SliderRoot>
 
-    <div v-if="showValueLabel" class="text-utility-darker mt-2 text-xs font-medium">
+    <span v-if="showValueLabel" class="text-utility-darker mt-2 text-xs font-medium">
       {{ model?.join(' - ') }}
-    </div>
+    </span>
   </div>
 </template>
 
@@ -82,7 +82,7 @@ const {
 
 const model = defineModel<number[]>()
 
-if (model.value == null) {
+if (model.value === null) {
   model.value = defaultValue
 }
 
@@ -105,7 +105,9 @@ function onCommit() {
 }
 
 function thumbAriaLabel(i: number) {
-  if (ariaLabel) return `${ariaLabel} thumb ${i + 1}`
+  if (ariaLabel) {
+    return `${ariaLabel} thumb ${i + 1}`
+  }
   return `Slider thumb ${i + 1}`
 }
 

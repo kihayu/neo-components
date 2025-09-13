@@ -1,11 +1,11 @@
 {
   "name": "neo-components",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "private": false,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "run-s type-check build-only build:types",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
@@ -13,19 +13,47 @@
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build:types": "node -e \"require('fs').rmSync('dist/types',{recursive:true,force:true})\" && vue-tsc -p tsconfig.build.json --declaration --emitDeclarationOnly"
+  },
+  "main": "dist/neo-components.cjs.js",
+  "module": "dist/neo-components.es.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/neo-components.es.js",
+      "require": "./dist/neo-components.cjs.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "dist/neo-components.css"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kihayu/neo-components.git"
+  },
+  "homepage": "https://github.com/kihayu/neo-components#readme",
+  "bugs": {
+    "url": "https://github.com/kihayu/neo-components/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.4",
     "@vueuse/core": "^13.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-vue-next": "^0.511.0",
-    "reka-ui": "^2.3.0",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.4",
-    "tw-animate-css": "^1.3.3",
-    "vue": "^3.5.13"
+    "tw-animate-css": "^1.3.3"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3",
@@ -64,7 +92,15 @@
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.2",
     "vitest": "^3.1.1",
-    "vue-tsc": "^2.2.8"
+    "vue-tsc": "^2.2.8",
+    "vue": "^3.5.13",
+    "lucide-vue-next": "^0.511.0",
+    "reka-ui": "^2.3.0"
+  },
+  "peerDependencies": {
+    "vue": ">=3.3.0",
+    "lucide-vue-next": ">=0.511.0",
+    "reka-ui": ">=2.3.0"
   },
   "eslintConfig": {
     "extends": [

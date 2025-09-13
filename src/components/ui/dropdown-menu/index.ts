@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-export { default as NeoDropdownMenu } from '@/components/ui/dropdown-menu/NeoDropdownMenu.vue'
+export { default as NeoDropdownMenu } from './NeoDropdownMenu.vue'
+export type * from './NeoDropdownMenu.vue'
 
 /**
  * DropdownMenu content sizing variants

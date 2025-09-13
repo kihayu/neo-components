@@ -13,4 +13,23 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    lib: {
+      entry: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
+      name: 'NeoComponents',
+      formats: ['es', 'cjs'],
+      fileName: (format) => `neo-components.${format === 'es' ? 'es' : 'cjs'}.js`,
+    },
+    rollupOptions: {
+      // Do not bundle peer deps
+      external: ['vue', 'reka-ui', 'lucide-vue-next'],
+      output: {
+        globals: {
+          vue: 'Vue',
+        },
+      },
+    },
+    sourcemap: true,
+    emptyOutDir: true,
+  },
 })

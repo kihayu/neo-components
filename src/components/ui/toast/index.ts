@@ -28,3 +28,9 @@ export const toastVariants = cva(
 )
 
 export type NeoToastVariants = VariantProps<typeof toastVariants>
+
+// Components and their types
+export { default as NeoToast } from './NeoToast.vue'
+export { default as NeoToastProvider } from './NeoToastProvider.vue'
+export type * from './NeoToast.vue'
+export type * from './NeoToastProvider.vue'

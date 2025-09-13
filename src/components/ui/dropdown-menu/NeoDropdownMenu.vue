@@ -39,7 +39,7 @@
             v-else-if="it.type === 'checkbox'"
             :disabled="!!it.disabled"
             :checked="isCheckboxChecked(it)"
-            class="data-[state=checked]:bg-primary focus-visible:outline-primary cursor-pointer rounded-lg border-4 border-transparent px-2 py-1.5 font-bold focus-visible:outline-2 data-[state=checked]:text-black"
+            class="data-[state=checked]:bg-primary focus-visible:outline-primary cursor-pointer rounded-lg border-4 border-transparent px-2 py-1.5 font-bold hover:inset-shadow-sm focus-visible:outline-2 data-[state=checked]:text-black"
             @update:checked="onCheckboxToggle(it)"
             @select.prevent
           >
@@ -77,7 +77,7 @@
           <DropdownMenuItem
             v-else
             :disabled="!!it.disabled"
-            class="data-[state=checked]:bg-primary focus-visible:outline-primary cursor-pointer rounded-lg border-4 border-transparent px-2 py-1.5 font-bold focus-visible:outline-2 data-[state=checked]:text-black"
+            class="data-[state=checked]:bg-primary focus-visible:outline-primary cursor-pointer rounded-lg border-4 border-transparent px-2 py-1.5 font-bold hover:inset-shadow-sm focus-visible:outline-2 data-[state=checked]:text-black"
             @select="onSelect(it)"
           >
             <div class="flex items-center gap-2">
@@ -160,19 +160,18 @@ export type { NeoDropdownMenuItem as Item }
 export type NeoDropdownMenuPropsContract = NeoDropdownMenuProps
 export type NeoDropdownMenuEmitsContract = NeoDropdownMenuEmits
 
-const { open, modal, items, align, side, sideOffset, radioValue, checkboxValues, ariaLabel, size } =
-  withDefaults(defineProps<NeoDropdownMenuProps<string>>(), {
-    open: undefined,
-    modal: true,
-    items: () => [] as NeoDropdownMenuItem<string>[],
-    align: 'start' as NeoAlign,
-    side: 'bottom' as NeoSide,
-    sideOffset: 8,
-    radioValue: null,
-    checkboxValues: () => ({}) as Record<string, boolean>,
-    ariaLabel: undefined,
-    size: 'md' as DropdownMenuContentVariants['size'],
-  })
+const {
+  open = undefined,
+  modal = true,
+  items = [] as NeoDropdownMenuItem<string>[],
+  align = 'start' as NeoAlign,
+  side = 'bottom' as NeoSide,
+  sideOffset = 8,
+  radioValue = null,
+  checkboxValues = {} as Record<string, boolean>,
+  ariaLabel = undefined,
+  size = 'md' as DropdownMenuContentVariants['size'],
+} = defineProps<NeoDropdownMenuProps<string>>()
 
 const emit = defineEmits<NeoDropdownMenuEmits<string>>()
 
