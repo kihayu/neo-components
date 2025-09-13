@@ -4,7 +4,6 @@
   </NeoLabel>
   <div class="relative">
     <NeoSelect
-      v-model="model"
       ref="selectRef"
       :id="id"
       :open="selectOpen"
