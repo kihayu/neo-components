@@ -9,18 +9,18 @@
           type="checkbox"
           :id="id"
           class="peer sr-only"
-          :checked="modelValue"
+          :checked="model"
           :disabled="disabled"
-          :aria-checked="modelValue"
+          :aria-checked="model"
           :aria-label="ariaLabel"
           @change="onInput"
         />
         <div
           class="relative z-10 flex h-7 w-14 flex-row overflow-hidden rounded-full border-4 border-black px-0.5 transition-colors duration-200 peer-focus-visible:outline-4 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-black"
-          :class="{ 'bg-primary justify-end': modelValue, 'justify-start bg-white': !modelValue }"
+          :class="{ 'bg-primary justify-end': model, 'justify-start bg-white': !model }"
         >
           <motion.div
-            :data-state="modelValue"
+            :data-state="model"
             layout
             :transition="{
               type: 'spring',
@@ -44,28 +44,18 @@ import { motion } from 'motion-v'
 
 export interface NeoToggleProps {
   id: string
-  modelValue: boolean
   disabled?: boolean
   ariaLabel?: string
 }
 
-const {
-  id = '',
-  modelValue = false,
-  disabled = false,
-  ariaLabel = 'Toggle switch',
-} = defineProps<NeoToggleProps>()
+const { id = '', disabled = false, ariaLabel = 'Toggle switch' } = defineProps<NeoToggleProps>()
 
-interface NeoToggleEmits {
-  (event: 'update:modelValue', value: boolean): void
-}
-
-const emit = defineEmits<NeoToggleEmits>()
+const model = defineModel<boolean>({ default: false })
 
 const onInput = (event: Event) => {
   if (!disabled) {
     const target = event.target as HTMLInputElement
-    emit('update:modelValue', target.checked)
+    model.value = target.checked
   }
 }
 </script>

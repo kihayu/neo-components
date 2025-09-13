@@ -17,9 +17,9 @@
           type="checkbox"
           :id="id"
           class="peer sr-only"
-          :checked="modelValue"
+          :checked="model"
           :disabled="disabled"
-          :aria-checked="modelValue"
+          :aria-checked="model"
           @change="onInput"
         />
         <motion.div
@@ -27,7 +27,7 @@
         ></motion.div>
         <motion.div
           :initial="{ opacity: 0 }"
-          :animate="{ opacity: modelValue ? 1 : 0 }"
+          :animate="{ opacity: model ? 1 : 0 }"
           class="absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2"
         >
           <Check :size="16" class="text-white" />
@@ -46,20 +46,15 @@ import { Check } from 'lucide-vue-next'
 
 export interface NeoCheckboxProps {
   id: string
-  modelValue: boolean
   disabled?: boolean
 }
 
-const { id = '', modelValue = false, disabled = false } = defineProps<NeoCheckboxProps>()
+const { id = '', disabled = false } = defineProps<NeoCheckboxProps>()
 
-interface NeoCheckboxEmits {
-  (event: 'update:modelValue', value: boolean): void
-}
-
-const emit = defineEmits<NeoCheckboxEmits>()
+const model = defineModel<boolean>({ default: false })
 
 const onInput = (event: Event) => {
   const target = event.target as HTMLInputElement
-  emit('update:modelValue', target.checked)
+  model.value = target.checked
 }
 </script>

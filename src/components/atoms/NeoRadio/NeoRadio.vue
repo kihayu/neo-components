@@ -55,31 +55,22 @@ import { computed } from 'vue'
 
 export interface NeoRadioProps<T = string | number | boolean> {
   id: string
-  modelValue: T
   value: T
   name: string
   disabled?: boolean
 }
 
-const {
-  id = '',
-  name = '',
-  disabled = false,
-  modelValue,
-  value,
-} = defineProps<NeoRadioProps<string | number | boolean>>()
+const { id = '', name = '', disabled = false, value } = defineProps<
+  NeoRadioProps<string | number | boolean>
+>()
 
-const isChecked = computed(() => modelValue === value)
+const model = defineModel<string | number | boolean>()
 
-interface NeoRadioEmits<T = string | number | boolean> {
-  (event: 'update:modelValue', value: T): void
-}
-
-const emit = defineEmits<NeoRadioEmits<string | number | boolean>>()
+const isChecked = computed(() => model.value === value)
 
 const onInput = () => {
   if (!disabled) {
-    emit('update:modelValue', value)
+    model.value = value as string | number | boolean
   }
 }
 </script>

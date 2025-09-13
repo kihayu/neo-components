@@ -37,7 +37,6 @@ export type CheckboxOption<T = string | number> = {
 }
 
 export interface NeoCheckboxGroupProps<T = string | number> {
-  modelValue: T[]
   options: CheckboxOption<T>[]
   name: string
   legend?: string
@@ -47,29 +46,17 @@ export interface NeoCheckboxGroupProps<T = string | number> {
   orientation?: 'horizontal' | 'vertical'
 }
 
-const {
-  modelValue,
-  options,
-  name,
-  disabled = false,
-  required = false,
-  orientation = 'vertical',
-  legend = '',
-  helperText = '',
-} = defineProps<NeoCheckboxGroupProps<string | number>>()
+const { options, name, disabled = false, required = false, orientation = 'vertical', legend = '', helperText = '' } =
+  defineProps<NeoCheckboxGroupProps<string | number>>()
 
-interface NeoCheckboxGroupEmits<T = string | number> {
-  (e: 'update:modelValue', value: T[]): void
-}
-
-const emit = defineEmits<NeoCheckboxGroupEmits<string | number>>()
+const model = defineModel<Array<string | number>>({ default: [] })
 
 const isSelected = <T extends string | number>(value: T): boolean => {
-  return modelValue.includes(value)
+  return (model.value ?? []).includes(value)
 }
 
 const updateValue = <T extends string | number>(value: T, checked: boolean) => {
-  const newValue = [...modelValue]
+  const newValue = [...(model.value ?? [])]
 
   if (checked && !newValue.includes(value)) {
     newValue.push(value)
@@ -80,6 +67,6 @@ const updateValue = <T extends string | number>(value: T, checked: boolean) => {
     }
   }
 
-  emit('update:modelValue', newValue)
+  model.value = newValue
 }
 </script>

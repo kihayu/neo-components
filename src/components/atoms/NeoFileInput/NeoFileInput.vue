@@ -110,7 +110,6 @@ export interface NeoFileInputProps {
   capture?: InputHTMLAttributes['capture']
   disabled?: InputHTMLAttributes['disabled']
   required?: boolean
-  modelValue?: File[]
   maxSize?: number
   minSize?: number
   maxFiles?: number
@@ -123,7 +122,6 @@ export interface NeoFileInputProps {
 }
 
 export interface NeoFileInputEmits {
-  (e: 'update:modelValue', files: File[]): void
   (e: 'change', files: File[], ev: Event): void
   (e: 'error', error: NeoFileInputError): void
   (e: 'invalid', message: string): void
@@ -139,7 +137,6 @@ const {
   capture = undefined,
   disabled = false,
   required = false,
-  modelValue = undefined,
   maxSize = undefined,
   minSize = undefined,
   maxFiles = undefined,
@@ -151,10 +148,12 @@ const {
 } = defineProps<NeoFileInputProps>()
 const emit = defineEmits<NeoFileInputEmits>()
 
+const model = defineModel<File[] | undefined>()
+
 const inputRef = ref<HTMLInputElement | null>(null)
 const dropRef = ref<HTMLElement | null>(null)
 const dragging = ref(false)
-const files = ref<File[]>(modelValue ?? [])
+const files = ref<File[]>(model.value ?? [])
 const lastError = ref<string | null>(null)
 
 function parseAccept(accept?: string): AcceptToken[] {
@@ -198,7 +197,7 @@ function matchesAccept(file: File, list: AcceptToken[]): boolean {
 
 function updateFiles(next: File[], ev?: Event) {
   files.value = next
-  emit('update:modelValue', next)
+  model.value = next
   if (ev) emit('change', next, ev)
 }
 
@@ -213,6 +212,8 @@ const describedbyId = computed(() => {
   if (descId.value) ids.push(descId.value)
   return ids.length ? ids.join(' ') : undefined
 })
+
+// computedId declared above to ensure it's available to descId
 
 const dropzoneClasses = computed(() =>
   cn(

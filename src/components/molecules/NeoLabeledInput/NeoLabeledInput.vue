@@ -18,6 +18,7 @@
       :placeholder="placeholder"
       :disabled="disabled"
       :scaleOnFocus="false"
+      v-model="model"
       @focus="inFocus = true"
       @blur="inFocus = false"
     />
@@ -29,6 +30,7 @@ import NeoLabel from '@/components/atoms/NeoLabel/NeoLabel.vue'
 import NeoInput from '@/components/atoms/NeoInput/NeoInput.vue'
 import { ref } from 'vue'
 
+const model = defineModel<string>()
 type Layout = 'vertical' | 'horizontal'
 
 export interface NeoLabeledInputProps {

@@ -14,10 +14,9 @@
         :key="index"
         :id="`${name}-${String(option.value)}`"
         :name="name"
-        :model-value="modelValue"
+        v-model="model"
         :value="option.value"
         :disabled="disabled || option.disabled"
-        @update:model-value="(value: string | number | boolean) => updateValue(value)"
       >
         {{ option.label }}
       </NeoRadio>
@@ -39,7 +38,6 @@ export type RadioOption<T = string | number | boolean> = {
 }
 
 export interface NeoRadioGroupProps<T = string | number | boolean> {
-  modelValue: T
   options: RadioOption<T>[]
   name: string
   legend?: string
@@ -49,24 +47,8 @@ export interface NeoRadioGroupProps<T = string | number | boolean> {
   orientation?: 'horizontal' | 'vertical'
 }
 
-const {
-  modelValue,
-  options,
-  name,
-  disabled = false,
-  required = false,
-  orientation = 'vertical',
-  legend = '',
-  helperText = '',
-} = defineProps<NeoRadioGroupProps<string | number | boolean>>()
+const { options, name, disabled = false, required = false, orientation = 'vertical', legend = '', helperText = '' } =
+  defineProps<NeoRadioGroupProps<string | number | boolean>>()
 
-interface NeoRadioGroupEmits<T = string | number | boolean> {
-  (e: 'update:modelValue', value: T): void
-}
-
-const emit = defineEmits<NeoRadioGroupEmits<string | number | boolean>>()
-
-const updateValue = <T extends string | number | boolean>(value: T) => {
-  emit('update:modelValue', value)
-}
+const model = defineModel<string | number | boolean>()
 </script>

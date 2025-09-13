@@ -55,7 +55,6 @@ import { ChevronDown } from 'lucide-vue-next'
 
 export interface NeoAccordionProps {
   title?: string
-  modelValue?: boolean
   id?: string
   disabled?: boolean
   allowToggle?: boolean
@@ -63,18 +62,13 @@ export interface NeoAccordionProps {
 
 const {
   title = 'Accordion Title',
-  modelValue = false,
   id = '',
   disabled = false,
   allowToggle = true,
 } = defineProps<NeoAccordionProps>()
-interface NeoAccordionEmits {
-  (e: 'update:modelValue', value: boolean): void
-}
+const model = defineModel<boolean>({ default: false })
 
-const emit = defineEmits<NeoAccordionEmits>()
-
-const isOpen = ref(modelValue)
+const isOpen = ref(model.value)
 const baseId = computed(() => id || `accordion-${Math.random().toString(36).slice(2, 11)}`)
 const headerId = computed(() => `${baseId.value}-header`)
 const contentId = computed(() => `${baseId.value}-content`)
@@ -84,13 +78,10 @@ const toggleAccordion = () => {
   if (!allowToggle && isOpen.value) return
 
   isOpen.value = !isOpen.value
-  emit('update:modelValue', isOpen.value)
+  model.value = isOpen.value
 }
 
-watch(
-  () => modelValue,
-  (newValue) => {
-    isOpen.value = newValue
-  },
-)
+watch(model, (newValue) => {
+  isOpen.value = newValue
+})
 </script>

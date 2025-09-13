@@ -59,7 +59,6 @@ type PopoverPosition = 'top' | 'right' | 'bottom' | 'left'
 type PopoverRole = 'dialog' | 'menu' | 'listbox' | 'tooltip'
 
 export interface NeoPopoverProps {
-  modelValue?: boolean
   position?: PopoverPosition
   dismissible?: boolean
   closeOnClickOutside?: boolean
@@ -72,7 +71,6 @@ export interface NeoPopoverProps {
 }
 
 const {
-  modelValue = false,
   position = 'bottom',
   dismissible = false,
   closeOnClickOutside = true,
@@ -84,15 +82,11 @@ const {
   disabled = false,
 } = defineProps<NeoPopoverProps>()
 
-interface NeoPopoverEmits {
-  (e: 'update:modelValue', value: boolean): void
-}
-
-const emit = defineEmits<NeoPopoverEmits>()
+const model = defineModel<boolean>({ default: false })
 
 const triggerRef = ref<HTMLElement | null>(null)
 const popoverRef = ref<HTMLElement | null>(null)
-const open = ref(modelValue)
+const open = ref(model.value)
 const popoverTop = ref(0)
 const popoverLeft = ref(0)
 const popoverId = computed(() => id || `popover-${Math.random().toString(36).slice(2, 11)}`)
@@ -200,7 +194,7 @@ const handleClickInSlot = () => {
 }
 
 watch(
-  () => modelValue,
+  model,
   (newValue) => {
     open.value = newValue
     if (newValue) {
@@ -212,7 +206,7 @@ watch(
 )
 
 watch(open, (newValue) => {
-  emit('update:modelValue', newValue)
+  model.value = newValue
   if (newValue) {
     nextTick(() => {
       updatePosition()
