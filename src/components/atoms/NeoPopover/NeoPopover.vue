@@ -4,6 +4,8 @@
     @click="togglePopover"
     @keydown.enter="togglePopover"
     @keydown.space="togglePopover"
+    @pointerdown.capture="onInternalPointerDown"
+    @mousedown.capture="onInternalPointerDown"
     :tabindex="disabled ? undefined : 0"
     role="button"
     :aria-expanded="open"
@@ -13,7 +15,7 @@
     <slot name="trigger"></slot>
   </div>
 
-  <Teleport to="body">
+  <Teleport :to="teleportTo" :disabled="teleportDisabled">
     <transition
       enter-active-class="transition duration-200 ease-out"
       enter-from-class="opacity-0 scale-95"
@@ -26,13 +28,18 @@
         v-show="open"
         ref="popoverRef"
         :id="popoverId"
-        class="fixed z-50 min-w-[200px] rounded-xl border-4 border-black bg-white p-4 text-black"
+        class="fixed z-[70] min-w-[200px] rounded-xl border-4 border-black bg-white p-4 text-black"
         :class="positionClass"
         :style="{ top: `${popoverTop}px`, left: `${popoverLeft}px` }"
         :role="role"
         aria-modal="true"
         :aria-labelledby="`${popoverId}-title`"
         :aria-describedby="`${popoverId}-desc`"
+        @click.capture.stop
+        @click.stop
+        @pointerdown.capture="onInternalPointerDown"
+        @pointerdown.stop
+        @mousedown.capture="onInternalPointerDown"
       >
         <div class="relative z-10" :id="`${popoverId}-desc`" @click="handleClickInSlot">
           <div v-if="$slots.header" class="font-primary">
@@ -68,6 +75,8 @@ export interface NeoPopoverProps {
   role?: PopoverRole
   id?: string
   disabled?: boolean
+  teleportDisabled?: boolean
+  teleportTo?: string | HTMLElement
 }
 
 const {
@@ -80,6 +89,8 @@ const {
   role = 'dialog',
   id = '',
   disabled = false,
+  teleportDisabled = false,
+  teleportTo = 'body',
 } = defineProps<NeoPopoverProps>()
 
 const model = defineModel<boolean>({ default: false })
@@ -90,6 +101,13 @@ const open = ref(model.value)
 const popoverTop = ref(0)
 const popoverLeft = ref(0)
 const popoverId = computed(() => id || `popover-${Math.random().toString(36).slice(2, 11)}`)
+
+// Track whether the current pointer interaction started inside the popover or trigger
+let pointerDownStartedInside = false
+
+const onInternalPointerDown = (): void => {
+  pointerDownStartedInside = true
+}
 
 const positionClass = computed(() => {
   const baseClass = {
@@ -170,13 +188,36 @@ const updatePosition = async () => {
 const handleClickOutside = (event: MouseEvent) => {
   if (!open.value || !closeOnClickOutside) return
 
+  // If the pointer interaction started inside the popover/trigger, skip closing on this click
+  if (pointerDownStartedInside) {
+    pointerDownStartedInside = false
+    return
+  }
+
   const target = event.target as HTMLElement
-  if (
-    popoverRef.value &&
-    !popoverRef.value.contains(target) &&
-    triggerRef.value &&
-    !triggerRef.value.contains(target)
-  ) {
+  const path = (event.composedPath ? event.composedPath() : []) as EventTarget[]
+
+  const isInPopover = () => {
+    if (!popoverRef.value) {
+      return false
+    }
+    if (popoverRef.value.contains(target)) {
+      return true
+    }
+    return path.includes(popoverRef.value)
+  }
+
+  const isInTrigger = () => {
+    if (!triggerRef.value) {
+      return false
+    }
+    if (triggerRef.value.contains(target)) {
+      return true
+    }
+    return path.includes(triggerRef.value)
+  }
+
+  if (!isInPopover() && !isInTrigger()) {
     closePopover()
   }
 }
@@ -193,17 +234,14 @@ const handleClickInSlot = () => {
   }
 }
 
-watch(
-  model,
-  (newValue) => {
-    open.value = newValue
-    if (newValue) {
-      nextTick(() => {
-        updatePosition()
-      })
-    }
-  },
-)
+watch(model, (newValue) => {
+  open.value = newValue
+  if (newValue) {
+    nextTick(() => {
+      updatePosition()
+    })
+  }
+})
 
 watch(open, (newValue) => {
   model.value = newValue
