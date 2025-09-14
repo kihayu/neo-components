@@ -22,7 +22,7 @@
         width: dropdownWidth + 'px',
         transform: selectOpen ? 'translateY(0)' : 'translateY(-10px)',
       }"
-      :class="{ 'opacity-100': selectOpen }"
+      :class="{ 'opacity-100': selectOpen, 'pointer-events-none': !selectOpen }"
       :aria-expanded="selectOpen"
       role="listbox"
       :aria-hidden="!selectOpen"
