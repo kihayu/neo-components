@@ -18,7 +18,7 @@
       <div class="flex flex-1 px-2 py-4">
         <slot />
       </div>
-      <div v-if="$slots.footer" class="font-primary flex h-12 items-center border-t-4 px-2 py-4">
+      <div v-if="$slots.footer" class="font-primary flex h-full items-center border-t-4 px-2 py-4">
         <slot name="footer" />
       </div>
     </motion.div>
