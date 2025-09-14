@@ -18,6 +18,7 @@
       :placeholder="placeholder"
       :disabled="disabled"
       :scaleOnFocus="false"
+      :type="type"
       v-model="model"
       @focus="inFocus = true"
       @blur="inFocus = false"
@@ -29,6 +30,7 @@
 import NeoLabel from '@/components/atoms/NeoLabel/NeoLabel.vue'
 import NeoInput from '@/components/atoms/NeoInput/NeoInput.vue'
 import { ref } from 'vue'
+import type { HTMLInputType } from '@/components/atoms/NeoInput/types'
 
 const model = defineModel<string>()
 type Layout = 'vertical' | 'horizontal'
@@ -38,6 +40,7 @@ export interface NeoLabeledInputProps {
   placeholder?: string
   disabled?: boolean
   layout?: Layout
+  type?: HTMLInputType
 }
 
 const {
@@ -45,6 +48,7 @@ const {
   placeholder = '',
   disabled = false,
   layout = 'vertical',
+  type = 'text',
 } = defineProps<NeoLabeledInputProps>()
 
 const inFocus = ref(false)
