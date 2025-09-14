@@ -12,13 +12,18 @@
       <div
         v-if="$slots.header"
         class="font-primary flex h-auto items-center border-b-4 px-2 py-4 leading-none"
+        :class="headerClasses"
       >
         <slot name="header" />
       </div>
       <div class="flex flex-1 px-2 py-4">
         <slot />
       </div>
-      <div v-if="$slots.footer" class="font-primary flex h-auto items-center border-t-4 px-2 py-4">
+      <div
+        v-if="$slots.footer"
+        class="font-primary flex h-auto items-center border-t-4 px-2 py-4"
+        :class="footerClasses"
+      >
         <slot name="footer" />
       </div>
     </motion.div>
@@ -38,9 +43,16 @@ import NeoButton from '@/components/atoms/NeoButton/NeoButton.vue'
 export interface NeoCardProps {
   shadow?: boolean
   dismissible?: boolean
+  headerClasses?: string
+  footerClasses?: string
 }
 
-const { shadow = false, dismissible = false } = defineProps<NeoCardProps>()
+const {
+  shadow = false,
+  dismissible = false,
+  headerClasses = '',
+  footerClasses = '',
+} = defineProps<NeoCardProps>()
 
 interface NeoCardEmits {
   (event: 'close'): void
