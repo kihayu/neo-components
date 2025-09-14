@@ -38,6 +38,7 @@ const model = defineModel<string>()
 interface NeoInputEmits {
   (event: 'focus'): void
   (event: 'blur'): void
+  (event: 'input', value: string): void
 }
 
 const emit = defineEmits<NeoInputEmits>()
@@ -45,5 +46,6 @@ const emit = defineEmits<NeoInputEmits>()
 function onInput(ev: Event) {
   const target = ev.target as HTMLInputElement | null
   model.value = target?.value ?? ''
+  emit('input', target?.value ?? '')
 }
 </script>

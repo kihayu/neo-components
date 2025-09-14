@@ -20,8 +20,9 @@
       :scaleOnFocus="false"
       :type="type"
       v-model="model"
-      @focus="inFocus = true"
       @blur="inFocus = false"
+      @focus="inFocus = true"
+      @input="emit('input', $event)"
     />
   </div>
 </template>
@@ -52,4 +53,10 @@ const {
 } = defineProps<NeoLabeledInputProps>()
 
 const inFocus = ref(false)
+
+interface NeoLabeledInputEmits {
+  (event: 'input', value: string): void
+}
+
+const emit = defineEmits<NeoLabeledInputEmits>()
 </script>
